@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>确认订单</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -20,108 +20,457 @@
 		<script src="js/base.js" type="application/javascript"></script>
 		<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
 		<script type="text/javascript " src="js/bootstrap.js"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
+		
 		<!-- <script src="js/jquery.stellar.js"></script> -->
-		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+		
+		
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			.infobox{
+			.infobox {
 				width: 90%;
 				margin: 5%;
 				padding-bottom: 2px;
 			}
-			.list{
+
+			.list {
 				height: 40px;
 				line-height: 40px;
 				padding-left: 15px;
 				border-bottom: solid 1px #ECECEC;
 				padding-right: 15px;
 			}
-			.listimg{
+
+			.listimg {
 				width: 100px;
 				height: 70px;
 				overflow: hidden;
 			}
-			.listimg img{
+
+			.listimg img {
 				width: 100px;
 				height: 70px;
 			}
-			.footer{
+
+			.footer {
 				width: 100%;
 				height: 50px;
 				position: fixed;
 				bottom: 0px;
 				z-index: 50;
 			}
-			
 		</style>
 	</head>
 	<body>
-		<div class="bg1 radiu7 infobox">
-			<div class="color1 font14 list">
-				输入订单信息
-			</div>
-			<div class="list">
-				<div class="color3 font13 ilblock">
-					姓名：
+		<div id="app">
+			<div class="bg1 radiu7 infobox">
+				<div class="color1 font14 list">
+					输入订单信息
 				</div>
-				<div class="color2 font12 ilblock">
-					请输入姓名
+				<div class="list">
+					<div class="color3 font13 ilblock">
+						姓名：
+					</div>
+					<input class="color2 font12 ilblock" placeholder="请输入姓名" style="border:none;height:80%" v-model="submitData.name">
+
+					</input>
 				</div>
-			</div>
-			<div class="list">
-				<div class="color3 font13 ilblock">
-					手机号码：
+				<div class="list">
+					<div class="color3 font13 ilblock">
+						手机号码：
+					</div>
+					<input class="color2 font12 ilblock" placeholder="请输入手机号码" style="border:none;height:80%" v-model="submitData.phone">
+
+					</input>
 				</div>
-				<div class="color2 font12 ilblock">
-					请输入手机号码
+				<div class="list">
+					<div class="color3 font13 ilblock">
+						预约时间：
+					</div>
+					<input class="color2 font12 ilblock" type='datetime-local' id="date-user" placeholder="请选择时间" style="border:none" />
+
+					
 				</div>
-			</div>
-			<div class="bg2 radiu7" style="width: 315px; height: 100px; margin: 15px 11px;">
-				<textarea class="bg2 radiu7 overflow0" style="height: 100%; width: 100%; border: none;" placeholder="请输入备注">
+				<div class="bg2 radiu7" style="width: 315px; height: 100px; margin: 15px 11px;">
+					<textarea class="bg2 radiu7 overflow0" style="height: 100%; width: 100%; border: none;" placeholder="请输入备注"
+					 v-model="submitData.passage1">
 					
 				</textarea>
+				</div>
+			</div>
+			<div class="bg1 radiu7 infobox">
+				<div class="color1 font14 list">
+					商品信息
+				</div>
+				<div class="list" style="height: 100px;padding: 15px;">
+					<div class="ilblock listimg radiu7 bg2">
+						<img :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''" />
+					</div>
+					<div class="ilblock overflow0 color3 font13 flo-right" style="line-height: 20px;height: 70px; width: 60%; margin-left: 15px;">
+						{{mainData.title}}
+					</div>
+				</div>
+				<div class="list">
+					<div class="color1 font13 ilblock">
+						{{mainData.title}}
+					</div>
+					<div class="color5 font12 ilblock flo-right">
+						￥{{mainData.price}}
+					</div>
+				</div>
+				<div class="list" style="border-bottom: none;">
+					<div class="color1 font13 ilblock">
+						购买数量：
+					</div>
+					<div class="color1 font12 ilblock flo-right">
+						<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;" @click="counter('-')">-</button>
+						<input class="ilblock" style="width: 27px; height: 26px;line-height: 26px; text-align: center;border: none;"
+						 v-model="mainData.count"></input>
+						<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;" @click="counter('+')">+</button>
+					</div>
+				</div>
+			</div>
+			<div style="width:100%;height:1rem"></div>
+			<div class="footer bg1">
+				<div class="ilblock flo-left font14 color1" style="width: 56%; text-align: center;">
+					小计：<span class="color5">￥{{price}}</span>
+				</div>
+				<div class="ilblock flo-right bg3 font14" style="width: 44%;left: 5px; line-height: 50px; text-align: center; color: #fff; height: 150px; position: relative;top: -15px;"
+				 @click='submit'>
+					微信支付
+				</div>
 			</div>
 		</div>
-		<div class="bg1 radiu7 infobox">
-			<div class="color1 font14 list">
-				商品信息
-			</div>
-			<div class="list" style="height: 100px;padding: 15px;">
-				<div class="ilblock listimg radiu7 bg2" >
+		<script type="text/javascript">
+			$("#date-user").change(function(){
+			  var dateTime=$("#date-user").val();
+				console.log(dateTime)
+		  });
+		</script>
+		<script type="text/babel">
+			
+			 
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						sliderData: [],
+						buttonClick: false,
+						isLoadAll: false,
+						mainData: [],
+						nowTime:'',
+						paginate:{
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+						searchItem:{
+							thirdapp_id:2,
+							type:1
+						},
+						isShow:false,
+						price:'',
+						submitData:{
+							name:'',
+							phone:'',
+							reserve_time:'',
+							passage1:'',
+							check_no:''
+						},
+						distriData:[]
+					}
+		
+				},
+				
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					var callback = (res)=>{
+					  
+					 this.init()
+					  
+					};
+					window.base.getUserToken(callback);
 					
-				</div>
-				<div class="ilblock overflow0 color3 font13" style="line-height: 20px;height: 70px; width: 60%; margin-left: 15px;">
-					标题标题标题标题标题标题标题标题标题
-				</div>
-			</div>
-			<div class="list">
-				<div class="color1 font13 ilblock">
-					一克拉牛排套餐
-				</div>
-				<div class="color5 font12 ilblock flo-right">
-					￥56.56
-				</div>
-			</div>
-			<div class="list" style="border-bottom: none;">
-				<div class="color1 font13 ilblock">
-					购买数量：
-				</div>
-				<div class="color1 font12 ilblock flo-right">
-					<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;">-</button>
-					<div class="ilblock" style="width: 27px; height: 26px;line-height: 26px; text-align: center;">1</div>
-					<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;">+</button>
-				</div>
-			</div>
-		</div>
-		<div class="footer bg1">
-			<div class="ilblock flo-left font14 color1" style="width: 56%; text-align: center;">
-				小计：<span class="color5">￥56.56</span>
-			</div>
-			<div class="ilblock flo-right bg3 font14" style="width: 44%;left: 5px; line-height: 50px; text-align: center; color: #fff; height: 150px; position: relative;top: -15px;">
-				微信支付
-			</div>
-		</div>
+					
+					
+				},
+		
+				
+		
+				methods: {
+					
+					init(){
+						const self = this;
+						self.nowTime = Date.parse(new Date());
+						console.log(self.nowTime)
+						self.getMainData();
+						self.createCode()
+					},
+		
+					createCode() {
+					  const self = this;
+					  var code = '';
+					  var codeLength = 6;
+					  var random = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+					  for (var i = 0; i < codeLength; i++) {
+					    var index = Math.floor(Math.random() * 9);
+					    code += random[index];
+					  };
+					  self.submitData.check_no = code;
+					  
+					},
+					
+					
+					submit(){
+						const self = this;
+						self.submitData.reserve_time = $('#date').val();
+						console.log(self.submitData)
+						
+						var newObject = window.base.cloneForm(self.submitData);
+						delete newObject.passage1;
+						console.log(newObject);
+						if(window.base.checkComplete(newObject)){
+							self.addOrder()
+						}else{
+							alert('请补全信息')
+						}
+					},
+					
+					getDistriData() {
+						const self = this;
+						
+						const postData = {
+							searchItem: {
+								child_no:localStorage.getItem('user_no'),
+							},
+							token:localStorage.getItem('user_token'),
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.distriData.push.apply(self.distriData,res.info.data)
+							} 
+						};
+						window.base.distriGet(postData, callback);
+					},
+					
+					getMainData() {
+						const self = this;
+						const postData = {
+							searchItem: {
+								id: window.base.GetRequest().id,
+							}
+						};
+						postData.getAfter = {
+							user:{
+								token:localStorage.getItem('user_token'),
+								tableName:'User',
+								middleKey:'user_no',
+								key:'user_no',
+								searchItem:{
+									status:1
+								},
+								condition:'='
+							},
+					
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData = res.info.data[0];
+								self.mainData.count = 1;
+								self.price = self.mainData.price
+							} else {
+								alert('数据错误')
+							};	
+							self.getDistriData()
+						};
+						window.base.productGet(postData, callback);
+					},
+				
+					counter(type) {
+						const self = this;
+						
+						if (type == '+') {
+							self.mainData.count++;
+						} else {
+							if (self.mainData.count > 0) {
+								self.mainData.count--;
+							}
+						};
+						
+						console.log('self.mainData', self.mainData)
+						self.price = self.mainData.count * self.mainData.price
+					},
+					
+					addOrder(e) {
+						const self = this;
+						const productData = [
+							
+						];
+						
+						
+						const postData = {
+							token: localStorage.getItem('user_token'),
+							orderList: [{
+								product:[{
+									id: self.mainData.id,
+									count: self.mainData.count,
+								}]
+							}],
+							type: 1,
+							data: {
+								name:self.submitData.name,
+								phone:self.submitData.phone,
+								reserve_time:self.submitData.reserve_time,
+								passage1:self.submitData.passage1,
+								check_no:self.submitData.check_no,
+								relation_user:self.mainData.user_no
+							},
+							
+						};
+						const callback = (res) => {
+							if (res && res.solely_code == 100000) {
+								
+								
+								self.orderId = res.info.id;
+								self.pay(self.orderId)
+								
+								
+							} else {
+								alert(res.msg);
+							};
+						};
+						window.base.addOrder(postData, callback);
+					},
+					
+					pay(order_id) {
+					
+						const self = this;
+						
+						const postData = {
+						
+							/* score:self.price */
+							
+							wxPay:{
+								price:self.price
+							}
+							
+						};
+								
+						postData.token = localStorage.getItem('user_token');
+						
+						postData.searchItem = {
+							id: order_id
+						};
+						postData.payAfter = [];
+						postData.payAfter.push(
+						  {
+						    tableName:'FlowLog',
+						    FuncName:'add',
+						    data:{
+						      count:self.mainData.price,
+						      trade_info:'货款',
+						      user_no:self.mainData.user_no,
+						      type:2,
+						      thirdapp_id:2,
+							  relation_user:localStorage.getItem('user_no'),
+							  relation_id:self.mainData.id
+						    }
+						  }
+						);
+						if(self.distriData.length>0){
+						  var transitionArray = self.distriData;
+						  for (var i = 0; i < transitionArray.length; i++){
+						    
+						      if(transitionArray[i].level==1){
+						        postData.payAfter.push(
+						          {
+						            tableName:'FlowLog',
+						            FuncName:'add',
+						            data:{
+						              count:self.mainData.first_class,
+						              trade_info:'下级返佣',
+						              user_no:transitionArray[i].parent_no,
+						              type:2,
+						              thirdapp_id:2,
+									  relation_user:localStorage.getItem('user_no'),
+									  relation_id:self.mainData.id
+						            }
+						          }
+						        );
+						      }else if(transitionArray[i].level==2){
+						        postData.payAfter.push(
+						          {
+						            tableName:'FlowLog',
+						            FuncName:'add',
+						            data:{
+						              count:self.mainData.second_class,
+						              trade_info:'下级返佣',
+						              user_no:transitionArray[i].parent_no,
+						              type:2,
+						              thirdapp_id:getApp().globalData.thirdapp_id,
+									  relation_user:localStorage.getItem('user_no'),
+									  relation_id:self.mainData.id
+						            }
+						          }
+						        );
+						      };    
+						  };
+						};
+						const callback = (res) => {
+							console.log(res)
+							if (res.solely_code == 100000) {
+								alert('支付成功');
+								
+								if (res.info) {
+									const payCallback = (payData) => {
+										if (payData == 1) {
+											const cc_callback = () => {
+												alert('支付成功');
+												
+											};
+					
+										};
+									};
+									window.base.realPay(res.info, payCallback);
+								} else {
+									alert('支付成功');
+									
+								};
+							} else {
+								alert(res.msg, 'none');
+							};
+						};
+						window.base.pay(postData, callback);
+					},
+		
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'
+					},
+					
+		
+					intoDetail(url,id) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					},
+		
+				}
+		
+			});
+		</script>
+
 	</body>
 </html>

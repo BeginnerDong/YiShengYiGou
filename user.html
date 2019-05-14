@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 	<head>
-		<title></title>
+		<title>我的</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -45,14 +45,12 @@
 		</style>
 	</head>
 	<body>
-		<div class="head">
-			我的
-		</div>
+		<div id="app">
 		<div class="name bg1">
 			<div class="radiu50 overflow0" style="width:60px ;height: 60px;margin: 0 auto;">
-				<img src="imgs/home-img.png" style="width:60px ;height: 60px;"/>
+				<img :src="mainData.headImgUrl" style="width:60px ;height: 60px;"/>
 			</div>
-			<div class="font14 color1" style="text-align: center; margin-top: 10px;">名称名称</div>
+			<div class="font14 color1" style="text-align: center; margin-top: 10px;">{{mainData.nickname}}</div>
 		</div>
 		<div class="list bg1" style="margin-bottom: 20px; margin-top: 15px;">
 			<ul>
@@ -85,7 +83,7 @@
 						<img src="imgs/about-icon1.png" style="width: 14px;" />
 					</div>
 					<li>
-						收获地址
+						收货地址
 					</li>
 				</a>
 				
@@ -109,13 +107,13 @@
 				</li>
 				<li>
 					<a href="calculate.html">
-						<div class="navbar-img"><img src="imgs/微信图片_20190430095822.png" /> </div>
+						<div class="navbar-img"><img src="imgs/nabar2.png" /> </div>
 						<div >聚划算</div>
 					</a>	
 				</li>
 				<li>
 					<a href="strategy.html">
-						<div class="navbar-img"><img src="imgs/微信图片_20190430095908.png" /> </div>
+						<div class="navbar-img"><img src="imgs/nabar3.png" /> </div>
 						<div >攻略</div>
 					</a>	
 				</li>
@@ -125,6 +123,69 @@
 				</a></li>
 			</ul>
 		</div>
+		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						mainData:[],
+					}
+		
+				},
+				mounted() {
+		
+				},
+				computed: {
+		
+				},
+				created: function() {
+						var callback = (res)=>{
+						  
+						  this.userGet()
+						  
+						};
+						window.base.getUserToken(callback);
+				},
+		
+				methods: {
+		
+					userGet() {
+						const self = this;
+						const postData = {
+							token: localStorage.getItem('user_token'),
+							thirdapp_id: 2
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData = res.info.data[0]
+							} else {
+								alert('数据错误')
+							}
+							console.log(self.mainData)
+						}
+						window.base.userGet(postData, callback);
+					},
+		
+				
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						console.log(into_url);
+						window.location.href = into_url + '.html'
+					},
+					intoPath_a(url) {
+						console.log(url);
+						var into_url = url;
+						console.log(into_url);
+						window.location.href = into_url
+					}
+		
+				}
+		
+			});
+		</script>
 	</body>
 	
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>我的地址</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,17 +24,19 @@
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
 		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			body{
+			body {
 				background: #fff;
 			}
-			.box{
+
+			.box {
 				width: 100%;
 				height: 100px;
 				padding: 15px;
 			}
-			button{
+
+			button {
 				width: 60%;
 				height: 30px;
 				margin: 80px auto 20px;
@@ -42,47 +44,183 @@
 		</style>
 	</head>
 	<body>
-		<div class="box bg1">
-			<div class="font14 color1">
-				张三<span class="color3" style="margin-left: 25px;">15632464563</span>
-			</div>
-			<div class="font14 color1" style="line-height: 30px;">
-				陕西省西安市高新区大都会
-			</div>
-			<div>
-				<div class="ilblock radiu50" style="border: solid 1px #DEDEDE; width: 12px; height: 12px; position: relative;top: 5px;">
-					<img src="imgs/address-icom1.png"  style="width: 12px;position: relative;top: -5px;"/>
+		<div id="app">
+			<div class="box bg1" style="border-bottom: 10px solid #f2f2f2;" v-for="item in mainData">
+				<div class="font14 color1">
+					{{item.name}}<span class="color3" style="margin-left: 25px;">{{item.phone}}</span>
 				</div>
-				<label class="color3 font10" style="margin-left: 6px;">默认地址</label>
-				
-				<div class="ilblock flo-right">
-					<div class="ilblock font10"><img src="imgs/address-icom2.png" style="width: 15px; margin-right: 10px;"/><span class="color2">编辑</span></div>
-					<div class="ilblock font10" style="margin-left: 20px;"><img src="imgs/address-icom3.png" style="width: 15px; margin-right: 10px;"/><span class="color2">删除</span></div>
+				<div class="font14 color1" style="line-height: 30px;">
+					{{item.city+item.detail}}
+				</div>
+				<div>
+					<div class="ilblock radiu50" style="border: solid 1px #DEDEDE; width: 12px; height: 12px; position: relative;top: 5px;" @click="updateAddress(item.id)">
+						
+						<img :src="item.isdefault==1?'imgs/address-icom1.png':'imgs/address-icom6.png'" style="width: 12px;position: relative;top: -5px;"/>
+					</div>
+					<label class="color3 font10" style="margin-left: 6px;" @click="updateAddress(item.id)">{{item.isdefault==1?'默认地址':'选为默认地址'}}</label>
+
+					<div class="ilblock flo-right">
+						<div class="ilblock font10"  @click="intoEdit('address-Add',type,item.id)"><img src="imgs/address-icom2.png" style="width: 15px; margin-right: 10px;" /><span
+							 class="color2">编辑</span></div>
+						<div class="ilblock font10" style="margin-left: 20px;"  @click="deleteAddress(item.id)"><img src="imgs/address-icom3.png" style="width: 15px; margin-right: 10px;" /><span
+							 class="color2">删除</span></div>
+					</div>
 				</div>
 			</div>
+
+			<button class="bg3 radiu20" type="button"><a href="address-Add.html" style="color: #fff;">添加地址</a></button>
 		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						is_choose: 0,
+						mainData: [],
+						paginate: {
+							count: 0,
+							currentPage: 1,
+							pagesize: 10,
+							is_page: true,
+						},
+						buttonClick:false
+					}
 		
-		<div class="bg2" style="width: 100%; height:10px ;"></div>
-		<div class="box bg1">
-			<div class="font14 color1">
-				张三<span class="color3" style="margin-left: 25px;">15632464563</span>
-			</div>
-			<div class="font14 color1" style="line-height: 30px;">
-				陕西省西安市高新区大都会
-			</div>
-			<div>
-				<div class="ilblock radiu50" style="border: solid 1px #DEDEDE; width: 12px; height: 12px; position: relative;top: 2px;">
-				</div>
-				<label class="color3 font10" style="margin-left: 6px;">默认地址</label>
+				},
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
 				
-				<div class="ilblock flo-right">
-					<div class="ilblock font10"><img src="imgs/address-icom2.png" style="width: 15px; margin-right: 10px;"/><span class="color2">编辑</span></div>
-					<div class="ilblock font10" style="margin-left: 20px;"><img src="imgs/address-icom3.png" style="width: 15px; margin-right: 10px;"/><span class="color2">删除</span></div>
-				</div>
-			</div>
-		</div>
-		<div class="bg2" style="width: 100%; height:10px ;"></div>
-		<button class="bg3 radiu20" type="button"><a href="address-Add.html" style="color: #fff;">添加地址</a></button>
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					this.type = window.base.GetRequest().type;
+					var callback = (res) => {
+						
+						this.getMainData()
+					};
+					window.base.getUserToken(callback);
+				},
 		
+				methods: {
+					
+					handleScroll() {
+						var wScrollY = window.scrollY; // 当前滚动条位置  
+						var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+						var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+						if ((wScrollY + wInnerH >= bScrollH) && !this.isLoadAll && !this.buttonClick) {
+							this.buttonClick = true;
+							this.paginate.currentPage++;
+							this.getMainData();
+						};
+					},
+		
+					getMainData(isNew) {
+						const self = this;
+						if (isNew) {
+							self.paginate = {
+								count: 0,
+								currentPage: 1,
+								pagesize: 10,
+								is_page: true,
+							}
+						};
+						const postData = {};
+						postData.paginate = window.base.cloneForm(self.paginate);
+						
+						postData.token = localStorage.getItem('user_token');
+						
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData.push.apply(self.mainData, res.info.data);
+							} else {
+								self.isLoadAll = true;
+								alert('没有更多了');
+							};
+						};
+						window.base.addressGet(postData, callback);
+					},
+		
+		
+					chooseToBuy(e) {
+						const self = this;
+						const id = window.base.getDataSet(e, 'id');
+		
+		
+					},
+		
+		
+		
+					deleteAddress(id) {
+						const self = this;
+						const postData = {};
+						postData.searchItem = {};
+						postData.searchItem.id = id;
+						
+							postData.token = localStorage.getItem('user_token');
+						
+						const callback = (res) => {
+		
+							if (res) {
+								self.mainData = [];
+								self.getMainData(true);
+							}
+						};
+						window.base.addressDelete(postData, callback)
+					},
+		
+		
+					updateAddress(id) {
+						const self = this;
+						const postData = {};
+					
+							postData.token = localStorage.getItem('user_token');
+						
+						postData.searchItem = {};
+						postData.searchItem.id = id;
+						postData.data = {
+							isdefault: 1
+						}
+						const callback = (res) => {
+		
+							if (res) {
+								self.mainData = [];
+								self.getMainData(true);
+							}
+						};
+						window.base.addressUpdate(postData, callback);
+					},
+		
+		
+					/* 	chooseDefalut(id) {
+							const self = this;
+							self.chooseDefalutId = id;
+							self.updateAddress
+						}, */
+		
+					intoPath(url,type) {
+						console.log(url);
+						var into_url = url;
+						console.log(into_url);
+						window.location.href = into_url + '.html'+'?type='+type
+					},
+					
+					intoEdit(url,type,id) {
+						console.log(url);
+						var into_url = url;
+						console.log(into_url);
+						window.location.href = into_url + '.html'+'?type='+type+'&id='+id
+					}
+		
+				}
+		
+			});
+		</script>
+
 	</body>
 </html>

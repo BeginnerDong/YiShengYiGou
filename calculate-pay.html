@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>确认订单</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,75 +24,67 @@
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
 		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			.infobox{
-				width: 90%;
-				margin: 5%;
+			.infobox {
+				width: 100%;
+				
 				padding-bottom: 2px;
 			}
-			.list{
+
+			.list {
 				height: 40px;
 				line-height: 40px;
 				padding-left: 15px;
 				border-bottom: solid 1px #ECECEC;
 				padding-right: 15px;
 			}
-			.listimg{
+
+			.listimg {
 				width: 100px;
 				height: 100px;
 				overflow: hidden;
 			}
-			.listimg img{
+
+			.listimg img {
 				width: 100px;
 				height: 100px;
 			}
-			.footer{
+
+			.footer {
 				width: 100%;
 				height: 50px;
 				position: fixed;
 				bottom: 0px;
 				z-index: 50;
 			}
-			
 		</style>
 	</head>
 	<body>
-		
+		<div id="app">
 		<div class="bg1 radiu7 infobox">
-			<div class="color1 font14 list">
-				商品信息
-			</div>
 			<div class="list" style="height: 130px;padding: 15px;">
-				<div class="ilblock listimg radiu7 bg2" >
-					
+				<div class="ilblock listimg radiu7 bg2">
+					<img :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''" />
 				</div>
 				<div class="ilblock overflow0 color3 font13" style="line-height: 20px;height: 100px; width: 60%; margin-left: 15px;">
-					<div class="color1 overflow1">标题标题标题标题</div>
-					<div class="color3 overflow2" style="height: 40px;">内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</div>
-					<div class="color5 font11" style="position: relative;top: 20px;">￥556.00</div>
+					<div class="color1 overflow1">{{mainData.title}}</div>
+					<div class="color3 overflow2" style="height: 40px;">{{mainData.description}}</div>
+					<div class="color5 font11" style="position: relative;top: 20px;">￥{{mainData.price}}</div>
 				</div>
 			</div>
-			<div class="list" style=" height: 50px; line-height: 20px;">
+			<div class="list" style=" height: 1.2rem; line-height: 0.6rem;">
 				<div class="color1 font13 ilblock flo-left">
 					收货地址
 				</div>
 				<div class="font12 ilblock" style="margin-left: 10px;">
-					<div class="color3">张三 <span style="margin-left: 20px;">15645875689</span> </div>
-					<div class="color3">陕西省西安市雁塔区高新大都荟</div>
+					<div class="color3">{{addressData.name}} <span style="margin-left: 20px;">{{addressData.phone}}</span> </div>
+					<div class="color3">{{addressData.city+addressData.detail}}</div>
 				</div>
-				<div class="ilblock flo-right" >
-						<a href="address.html">
-							<img src="imgs/about-icon5.png" style="width: 7px;position: relative; top: 12px;" />
-						</a>
-				</div>
-			</div>
-			<div class="list">
-				<div class="color1 font13 ilblock">
-					一克拉牛排套餐
-				</div>
-				<div class="color5 font12 ilblock flo-right">
-					￥56.56
+				<div class="ilblock flo-right">
+					<a href="address.html">
+						<img src="imgs/about-icon5.png" style="width: 7px;position: relative; top: 12px;" />
+					</a>
 				</div>
 			</div>
 			<div class="list">
@@ -100,26 +92,359 @@
 					购买数量：
 				</div>
 				<div class="color1 font12 ilblock flo-right">
-					<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;">-</button>
-					<div class="ilblock" style="width: 27px; height: 26px;line-height: 26px; text-align: center;">1</div>
-					<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;">+</button>
+					<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;" @click="counter('-')">-</button>
+					<input class="ilblock" style="width: 27px; height: 26px;line-height: 26px; text-align: center;border: none;"
+					 v-model="mainData.count"></input>
+					<button class="ilblock" style="width: 27px; height: 26px;line-height: 26px;" @click="counter('+')">+</button>
 				</div>
 			</div>
-			<div style="width: 315px; height: 100px; margin: 15px 11px;">
+			<div style="width: 90%; height: 100px; margin: 15px 5%;">
 				<div class="color1 font13">备注</div>
-				<textarea class="bg2 overflow0" style=" margin-top: 10px; height: 100%; width: 100%; border: none;" placeholder="请输入备注">
-					
+				<textarea class="bg2 overflow0" style=" margin-top: 10px; height: 100%; width: 100%; border: none;" placeholder="请输入备注" v-model="submitData.passage1">
+
 				</textarea>
 			</div>
 			<div style="width: 100%; height: 30px;"></div>
 		</div>
 		<div class="footer bg1">
 			<div class="ilblock flo-left font14 color1" style="width: 56%; text-align: center;">
-				小计：<span class="color5">￥56.56</span>
+				小计：<span class="color5">￥{{price}}</span>
 			</div>
 			<div class="ilblock flo-right bg3 font14" style="width: 44%;left: 5px; line-height: 50px; text-align: center; color: #fff; height: 150px; position: relative;top: -15px;">
 				微信支付
 			</div>
 		</div>
+		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						sliderData: [],
+						buttonClick: false,
+						isLoadAll: false,
+						mainData: [],
+						nowTime:'',
+						paginate:{
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+						searchItem:{
+							thirdapp_id:2,
+							type:1
+						},
+						isShow:false,
+						price:'',
+						submitData:{
+							name:'',
+							phone:'',
+							reserve_time:'',
+							passage1:'',
+							check_no:''
+						},
+						distriData:[],
+						addressData:[],
+						
+					}
+		
+				},
+				
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					var callback = (res)=>{
+					  
+					 this.init()
+					  
+					};
+					window.base.getUserToken(callback);
+					
+					
+					
+				},
+		
+		
+		
+				methods: {
+					
+					init(){
+						const self = this;
+						self.nowTime = Date.parse(new Date());
+						console.log(self.nowTime)
+						self.getMainData();
+						self.createCode();
+						self.getAddressData()
+					},
+					
+					getAddressData(){
+					  const self = this;
+					  const postData = {}
+					  postData.token=localStorage.getItem('user_token'),
+					  postData.searchItem = {
+					    isdefault:1
+					  };
+					  const callback = (res)=>{
+					    if(res.info.data.length>0){
+					      self.addressData = res.info.data[0]; 
+					    };					   
+					  };
+					  window.base.addressGet(postData,callback);
+					},
+		
+					createCode() {
+					  const self = this;
+					  var code = '';
+					  var codeLength = 6;
+					  var random = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+					  for (var i = 0; i < codeLength; i++) {
+					    var index = Math.floor(Math.random() * 9);
+					    code += random[index];
+					  };
+					  self.submitData.check_no = code;
+					  
+					},
+					
+					
+					getDistriData() {
+						const self = this;
+						
+						const postData = {
+							searchItem: {
+								child_no:localStorage.getItem('user_no'),
+							},
+							token:localStorage.getItem('user_token'),
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.distriData.push.apply(self.distriData,res.info.data)
+							} 
+						};
+						window.base.distriGet(postData, callback);
+					},
+					
+					getMainData() {
+						const self = this;
+						const postData = {
+							searchItem: {
+								id: window.base.GetRequest().id,
+							}
+						};
+						postData.getAfter = {
+							user:{
+								token:localStorage.getItem('user_token'),
+								tableName:'User',
+								middleKey:'user_no',
+								key:'user_no',
+								searchItem:{
+									status:1
+								},
+								condition:'='
+							},
+					
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData = res.info.data[0];
+								self.mainData.count = 1;
+								self.price = self.mainData.price
+							} else {
+								alert('数据错误')
+							};	
+							self.getDistriData()
+						};
+						window.base.productGet(postData, callback);
+					},
+				
+					counter(type) {
+						const self = this;
+						
+						if (type == '+') {
+							self.mainData.count++;
+						} else {
+							if (self.mainData.count > 0) {
+								self.mainData.count--;
+							}
+						};
+						
+						console.log('self.mainData', self.mainData)
+						self.price = self.mainData.count * self.mainData.price
+					},
+					
+					addOrder(e) {
+						const self = this;
+						if(self.addressData.length==0){
+							alert('请添加收货地址');
+							return
+						};
+						const productData = [
+							
+						];
+						
+						
+						const postData = {
+							token: localStorage.getItem('user_token'),
+							orderList: [{
+								product:[{
+									id: self.mainData.id,
+									count: self.mainData.count,
+								}]
+							}],
+							type: 1,
+							data: {
+								name:self.submitData.name,
+								phone:self.submitData.phone,
+								reserve_time:self.submitData.reserve_time,
+								passage1:self.submitData.passage1,
+								check_no:self.submitData.check_no,
+								relation_user:self.mainData.user_no
+							},
+							
+						};
+						const callback = (res) => {
+							if (res && res.solely_code == 100000) {
+								
+								
+								self.orderId = res.info.id;
+								self.pay(self.orderId)
+								
+								
+							} else {
+								alert(res.msg);
+							};
+						};
+						window.base.addOrder(postData, callback);
+					},
+					
+					pay(order_id) {
+					
+						const self = this;
+						
+						const postData = {
+						
+							score:self.price
+							
+							/* wxPay:{
+								price:self.price
+							} */
+							
+						};
+								
+						postData.token = localStorage.getItem('user_token');
+						
+						postData.searchItem = {
+							id: order_id
+						};
+						postData.payAfter = [];
+						postData.payAfter.push(
+						  {
+						    tableName:'FlowLog',
+						    FuncName:'add',
+						    data:{
+						      count:self.mainData.price,
+						      trade_info:'货款',
+						      user_no:self.mainData.user_no,
+						      type:2,
+						      thirdapp_id:2,
+							  relation_user:localStorage.getItem('user_no'),
+							  relation_id:self.mainData.id
+						    }
+						  }
+						);
+						if(self.distriData.length>0){
+						  var transitionArray = self.distriData;
+						  for (var i = 0; i < transitionArray.length; i++){
+						    
+						      if(transitionArray[i].level==1){
+						        postData.payAfter.push(
+						          {
+						            tableName:'FlowLog',
+						            FuncName:'add',
+						            data:{
+						              count:self.mainData.first_class,
+						              trade_info:'下级返佣',
+						              user_no:transitionArray[i].parent_no,
+						              type:2,
+						              thirdapp_id:2,
+									  relation_user:localStorage.getItem('user_no'),
+									  relation_id:self.mainData.id
+						            }
+						          }
+						        );
+						      }else if(transitionArray[i].level==2){
+						        postData.payAfter.push(
+						          {
+						            tableName:'FlowLog',
+						            FuncName:'add',
+						            data:{
+						              count:self.mainData.second_class,
+						              trade_info:'下级返佣',
+						              user_no:transitionArray[i].parent_no,
+						              type:2,
+						              thirdapp_id:getApp().globalData.thirdapp_id,
+									  relation_user:localStorage.getItem('user_no'),
+									  relation_id:self.mainData.id
+						            }
+						          }
+						        );
+						      };    
+						  };
+						};
+						const callback = (res) => {
+							console.log(res)
+							if (res.solely_code == 100000) {
+								alert('支付成功');
+								
+								if (res.info) {
+									const payCallback = (payData) => {
+										if (payData == 1) {
+											const cc_callback = () => {
+												alert('支付成功');
+												
+											};
+					
+										};
+									};
+									window.base.realPay(res.info, payCallback);
+								} else {
+									alert('支付成功');
+									
+								};
+							} else {
+								alert(res.msg, 'none');
+							};
+						};
+						window.base.pay(postData, callback);
+					},
+		
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'
+					},
+					
+		
+					intoDetail(url,id) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					},
+		
+				}
+		
+			});
+		</script>
+
 	</body>
 </html>

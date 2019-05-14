@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>商家登录</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 		<link href="css/basic.css" rel="stylesheet" type="text/css" />
-		<link href="css/style.css" rel="stylesheet" type="text/css" />
+
 		<link href="css/responsive.css" rel="stylesheet" type="text/css" />
 		<link href="css/wxParse.css" rel="stylesheet" />
 		<link href="css/font-awesome.min.css" rel="stylesheet">
@@ -23,28 +23,32 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			body{
+			body {
 				background: #fff;
 			}
-			.list{
+
+			.list {
 				width: 75%;
 				border-bottom: solid 1px #F2F2F2;
 				height: 55px;
 				line-height: 55px;
 				margin: 0 auto;
-				
+
 			}
-			.list input{
+
+			.list input {
 				height: 50px;
-				position: relative;top: -2px;
+				position: relative;
+				top: -2px;
 				left: 45px;
 				width: 85%;
 				border: none;
 			}
-			button{
+
+			button {
 				width: 70%;
 				height: 35px;
 				margin: 80px auto 20px;
@@ -52,14 +56,125 @@
 		</style>
 	</head>
 	<body>
-		<div style="width: 100%; height: 250px; background: url(imgs/login-img.png) no-repeat;background-size: 100%;">
+		<div id="app">
+			<div style="width: 100%; height: 250px; background: url(imgs/login-img.png) no-repeat;background-size: 100%;">
+			</div>
+			<div class="list color1" style="background: url(imgs/login-icon1.png) no-repeat 0px center; background-size: 5%;">
+				<input class="color2" placeholder="请输入用户名/手机号" v-model="submitData.login_name"/>
+			</div>
+			<div class="list color1" style="background: url(imgs/login-icon2.png) no-repeat 0px center; background-size: 4.5%;">
+				<input class="color2" placeholder="请输入密码" v-model="submitData.password" type="password"/>
+			</div>
+			<button class="bg3 radiu20" type="button" style="color: #fff;" @click="submit">登录</button>
 		</div>
-		<div class="list color1" style="background: url(imgs/login-icon1.png) no-repeat 0px center; background-size: 5%;">
-			<input class="color2" placeholder="请输入用户名/手机号" />
-		</div>
-		<div class="list color1" style="background: url(imgs/login-icon2.png) no-repeat 0px center; background-size: 4.5%;">
-			<input class="color2" placeholder="请输入密码" />
-		</div>
-		<button class="bg3 radiu20" type="button"><a href="store-user.html" style="color: #fff;">登录</a></button>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						submitData: {
+							login_name: '',
+							password: ''
+		
+						},
+					}
+		
+				},
+				mounted() {
+		
+				},
+				computed: {
+		
+				},
+				created: function() {
+					if(localStorage.getItem('merchant_token')){
+						window.location.href = './store-user.html'
+					};
+					var callback = (res)=>{
+					  
+					  this.userGet()
+					  
+					};
+					window.base.getUserToken(callback);
+				},
+		
+				methods: {
+		
+					
+					userGet() {
+						const self = this;
+						const postData = {
+							token: localStorage.getItem('user_token'),
+							thirdapp_id: 2
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData = res.info.data[0]
+							} else {
+								alert('数据错误')
+							}
+							console.log(self.mainData)
+						}
+						window.base.userGet(postData, callback);
+					},
+					
+					submit() {
+						const self = this;
+						const postData = {
+							login_name: self.submitData.login_name,
+							password: self.submitData.password,
+						};
+						if (window.base.checkComplete(self.submitData)) {
+							const callback = (res) => {
+								if (res.solely_code == 100000) {
+									console.log(res);
+									
+									
+									localStorage.setItem('merchant_token', res.token);
+									localStorage.setItem('merchant_no', res.info.user_no);
+							
+									self.userUpdata();
+								} else {
+									alert(res.msg)
+								}
+							}
+							window.base.login(postData, callback);
+						} else {
+							alert('请输入账号密码', 'none')
+						};
+					},
+					
+					userUpdata() {
+						const self = this;
+						const postData = {
+							token: localStorage.getItem('merchant_token'),
+							searchItem:{
+								thirdapp_id:2
+							},
+							data:{
+								openid:self.mainData.openid,
+								headImgUrl:self.mainData.headImgUrl,
+								
+							}
+						};
+						const callback = (res) => {
+							
+							
+							window.location.href = './store-user.html'
+						}
+						window.base.userUpdate(postData, callback);
+					},
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						console.log(into_url);
+						window.location.href = into_url + '.html'
+					}
+		
+				}
+		
+			});
+		</script>
 	</body>
 </html>

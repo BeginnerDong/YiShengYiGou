@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>提现</title>
+		<title>我的收益</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,45 +23,65 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
+		
 		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			.box {
-				width: 345px;
-				height: 285px;
-				box-shadow: 0px 0px 20px #E0E0E1;
-				margin: 10% 4%;
-				padding: 15px;
+			.top {
+				width: 100%;
+				height: 137px;
+				padding-top: 40px;
 			}
 
-			.box-list {
+			.list-item {
 				width: 100%;
-				height: 60px;
+				height: 65px;
 				border-bottom: solid 1px #EFEFEF;
+			}
+
+			.img-box {
+				width: 40px;
+				height: 40px;
+				margin-top: 13px;
+			}
+
+			.img-box img {
+				width: 40px;
+				height: 40px;
 			}
 		</style>
 	</head>
 	<body>
-		<div id="app">
-			<div class="box bg1">
-				<div class="font15 color1" style="margin-top: 30px;">提现金额</div>
-				<div class="box-list">
-					<span class="color1" style="font-size: 30px; line-height: 65px;">￥</span>
-					<input placeholder="请输入提现金额" v-model="submitData.count" style="border:none"/>
+	<div id="app">
+		<div class="top bg3">
+			<div style="font-size: 25px; color:#fff; text-align: center;">￥{{userData.info?userData.info.balance:''}}</div>
+			<!-- <div class="font13 radiu20 bg1" style="width: 60px; height: 22px; text-align: center; line-height: 22px; margin: 10px auto;">
+				<a class="color1" href="income-next.html">提现</a>
+			</div> -->
+		</div>
+		<div style="width: 100%;padding: 0px 15px;">
+			
+		
+
+			<div class="list-item" v-for="item in mainData" v-if="item.count>0">
+				<div class="ilblock flo-left" style="width: 40%;display: flex;">
+					<div class="img-box ilblock  radiu50" >
+						<img :src="item.merchant.headImgUrl" class="radiu50"/>
+					</div>
+					<div class="ilblock " style="color: rgb(153,153,153);">
+						<div class="color3 avoidOverflow" style="line-height: 36px;">{{item.merchant.nickname}}</div>
+						<div class="color2" style="overflow: hidden;">{{item.create_time}}</div>
+					</div>
 				</div>
-				<div class="font12 color2" style="line-height: 35px;">本次可提现￥{{userData.info?userData.info.balance:''}}，<span class="color1" @click="all">全部提现</span> </div>
-				<button class="bg3" style="width: 300px; height: 40px; color: #fff; margin: 36px auto;" type="button" @click="submit">提现</button>
+				<div class="ilblock flo-left font13 color3" style="width: 30%; text-align: center;">
+					<div class="color3" style="margin-top: 15px;">{{item.product.title}}</div>
+					<div class="color2" style="line-height: 25px;">￥{{item.product.price}}</div>
+				</div>
+				
+				<div class="ilblock flo-left font13 color5" style="width: 30%; line-height: 65px; text-align: right;">
+					￥{{item.count}}
+				</div>
 			</div>
-			<div style="width: 100%; padding: 15px;">
-				<div class="color3 font12">
-					提现需加客服微信，客服会帮你申请
-				</div>
-				<div class="color3 font12" style="line-height: 40px;">
-					微信号：56596253226
-					<div class="font12 bg3 radiu20 ilblock flo-right" style="color: #fff; height: 20px; width: 50px; line-height: 20px; text-align: center;">
-						复制</div>
-				</div>
-			</div>
+		</div>
 		</div>
 		<script type="text/babel">
 			var app = new Vue({
@@ -79,9 +99,6 @@
 						},
 						searchItem:{
 							type:2
-						},
-						submitData:{
-							count:''
 						}
 					}
 		
@@ -102,7 +119,7 @@
 				
 					var callback = (res)=>{
 					  self.userGet();
-					 
+					  self.getMainData()
 					  
 					};
 					window.base.getUserToken(callback);
@@ -125,7 +142,7 @@
 					userGet() {
 						const self = this;
 						const postData = {
-							token: localStorage.getItem('user_token'),
+							token: localStorage.getItem('merchant_token'),
 							thirdapp_id: 2
 						};
 						const callback = (res) => {
@@ -139,52 +156,70 @@
 						window.base.userGet(postData, callback);
 					},
 		
-					flowLogAdd() {
-						const self = this
-					
-						const postData = {
-							data: {
-								count: -self.submitData.count,
-								trade_info: '提现',
-								status: 0,
-								type: 2,
-								thirdapp_id: 2
-							},
-							token:localStorage.getItem('user_token'),
-						};
-						
-						
-						const callback = (res) => {
-							
-							if (res.solely_code == 100000) {
-								alert('申请成功');
-								window.location.href = 'income.html'
-							}
-						};
-						window.base.flowLogAdd(postData, callback)
-					},
-					
-					submit() {
+					getMainData(isNew) {
 						const self = this;
-					
-						const pass = window.base.checkComplete(self.submitData);
-						console.log('pass', pass)
-						if (pass) {
-							if(parseFloat(self.submitData.count)<parseFloat(self.userData.info.balance)){
-								self.flowLogAdd()
-							}else{
-								alert('佣金不足')
+						if (isNew) {
+							self.paginate = {
+								count: 0,
+								currentPage: 1,
+								pagesize: 10,
+								is_page: true,
 							}
-							
-						} else {
-							alert('请输入提现金额')
 						};
+						const postData = {};
+						postData.paginate = window.base.cloneForm(self.paginate);
+						postData.token=localStorage.getItem('merchant_token');
+						postData.searchItem = window.base.cloneForm(self.searchItem);
+						postData.searchItem.user_no= localStorage.getItem('merchant_no');
+						
+						postData.order = {
+							create_time: 'desc'
+						};
+						postData.getAfter = {
+							merchant:{
+								tableName:'User',
+								middleKey:'relation_user',
+								key:'user_no',
+								searchItem:{
+									status:1
+								},
+								condition:'=',
+								info:['headImgUrl','nickname']
+							},
+							product:{
+								tableName:'Product',
+								middleKey:'relation_id',
+								key:'id',
+								searchItem:{
+									status:1
+								},
+								condition:'=',
+								info:['title','price']
+							},
+						}
+						const callback = (res) => {
+							if (res.solely_code == 100000) {
+								if (res.info.data.length > 0) {
+									self.mainData.push.apply(self.mainData, res.info.data);
+									for (var i = 0; i < self.mainData.length; i++) {
+										self.mainData[i].create_time = self.mainData[i].create_time.substring(0, 10);
+										
+									}
+								} else {
+									self.isLoadAll = true;
+									alert('没有更多了');
+								};
+		
+							} else {
+								alert('网络故障')
+							};
+							
+							
+							console.log('getMainData', self.mainData)
+						};
+						window.base.flowLogGet(postData, callback);
 					},
-					
-					all(){
-						const self= this;
-						self.submitData.count = self.userData.info.balance
-					},
+		
 					
 		
 					intoPath(url,id) {
@@ -196,5 +231,6 @@
 		
 			});
 		</script>
+
 	</body>
 </html>

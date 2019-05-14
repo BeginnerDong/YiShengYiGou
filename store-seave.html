@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title</title>
+		<title>库存</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,7 +23,7 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
+		
 		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
 		<link rel="stylesheet" type="text/css" href="YSG.css/order.css"/>
 		<style type="text/css">
@@ -70,40 +70,207 @@
 	</head>
 	<body>
 		
-		
-		<div class="storebox bg1">
-			<div class="storebox-btm">
-				<div class="ilblock img-box">
-					<img src="imgs/组9@2x.png" />
-				</div>
-				<div class="ilblock imgname">
-					<div class="font14 color1 overflow2" style="margin-top: 5px; height: 48px; line-height: 22px;" >
-						标题标题标题标题标题标题标题标题标题标题标题标题
+		<div id="app">
+			<div class="storebox bg1" v-for="(item,index) in mainData">
+				<div class="storebox-btm">
+					<div class="ilblock img-box">
+						<img :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" />
 					</div>
-					<div class="color2" style="font-size: 12px; position: relative;top: -5px;">总库存：200</div>
-					<div class="font10 ilblock color2" style="text-align:center;line-height: 22px; border: solid 1px #CDCDCD; width: 95px;height: 25px;
-					position: relative;top: -12px;">输入今天库存</div>
-					<button class="bg3 radiu20 ilblock flo-right" style="height: 25px;width: 60px; text-align: center;line-height: 25px; color: #fff;position: relative;top: -4px;">保存</button>
+					<div class="ilblock imgname">
+						<div class="font14 color1 overflow2" style="margin-top: 18px; line-height: 22px;" >
+							{{item.title}}<div style="display: none;">{{isEdit[index]}}{{test}}</div>
+						</div>
+						<div class="color2" style="font-size: 12px">总库存：{{item.stock}}</div>
+						<div class="flex">
+						<div class="color2" style="font-size: 12px" v-if="!isEdit[index]">今日库存：{{item.stock_day}}</div>
+						
+						<input class="font10 ilblock color2" style="text-align:center;line-height: 22px; width: 95px;height: 25px;
+						position: relative;top: -12px;" v-if="isEdit[index]" v-model="submitData[index].count" placeholder="输入今日库存"></input>
+						<button class="bg3 radiu20 ilblock flo-right" 
+						style="height: 25px;width: 60px; text-align: center;line-height: 25px; color: #fff;margin-left: 15%;" v-if="!isEdit[index]" @click="edit" :data-index="index">编辑</button>
+						<button class="bg3 radiu20 ilblock flo-right" 
+						style="height: 25px;width: 60px; text-align: center;line-height: 25px; color: #fff;margin-left: 15%" v-if="isEdit[index]" @click="submit" :data-index="index">保存</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="storebox bg1">
-			<div class="storebox-btm">
-				<div class="ilblock img-box">
-					<img src="imgs/组9@2x.png" />
-				</div>
-				<div class="ilblock imgname">
-					<div class="font14 color1 overflow2" style="margin-top: 5px; height: 48px; line-height: 22px;" >
-						标题标题标题标题标题标题标题标题标题标题标题标题
-					</div>
-					<div class="color2" style="font-size: 12px; position: relative;top: -5px;">总库存：200</div>
-					<div class="font10 ilblock color2" style="text-align:center;line-height: 22px; border: solid 1px #CDCDCD; width: 95px;height: 25px;
-					position: relative;top: -12px;">输入今天库存</div>
-					<button class="bg3 radiu20 ilblock flo-right" style="height: 25px;width: 60px; text-align: center;line-height: 25px; color: #fff;position: relative;top: -4px;">保存</button>
-				</div>
-			</div>
-		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						sliderData: [],
+						buttonClick: false,
+						isLoadAll: false,
+						mainData: [],
+						nowTime:'',
+						paginate:{
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+						searchItem:{
+							thirdapp_id:2,
+							user_no:localStorage.getItem('merchant_no'),
+						},
+						submitData:[
+			
+						],
+						isEdit:[],
+						test:false
+					}
 		
+				},
+				
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					var callback = (res)=>{
+					  
+					 this.init()
+					  
+					};
+					window.base.getMerchantToken(callback);
+					
+					
+					
+				},
+		
+		
+		
+				methods: {
+					
+					init(){
+						const self = this;
+						self.nowTime = Date.parse(new Date());
+						console.log(self.nowTime)
+						this.getMainData();
+					},
+		
+					handleScroll() {
+						var wScrollY = window.scrollY; // 当前滚动条位置  
+						var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+						var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+						if ((wScrollY + wInnerH >= bScrollH) && !this.isLoadAll && !this.buttonClick) {
+							this.buttonClick = true;
+							this.paginate.currentPage++;
+							this.getMainData();
+						};
+					},
+		
+					getMainData(isNew) {
+						const self = this;
+						if (isNew) {
+							self.mainData = [];
+							self.paginate = {
+								count: 0,
+								currentPage: 1,
+								pagesize: 6,
+								is_page: true,
+							}
+						};
+						const postData = {};
+						postData.paginate = window.base.cloneForm(self.paginate);
+						postData.searchItem = window.base.cloneForm(self.searchItem);
+					
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData.push.apply(self.mainData, res.info.data)
+								for (var i = 0; i < self.mainData.length; i++) {
+									 self.isEdit.push(false);
+									 self.submitData.push({count:''})
+								}
+							} else {
+								self.isLoadAll = true;
+								alert('没有更多了');
+							};
+							console.log('self.mainData', self.mainData)
+							console.log('self.submitData', self.submitData)
+						};
+						window.base.productGet(postData, callback);
+					},
+					
+					edit(e) {
+						const self = this;
+						console.log(e);
+						var index = window.base.getDataSet(e,'index').index;
+						self.isEdit[index] = true;
+						self.test = !self.test;
+						console.log(self.isEdit);
+						console.log(self.test)
+					},
+					
+					productUpdate(index){
+					  const self = this;
+					  const postData = {};
+					  postData.token = localStorage.getItem('merchant_token'),
+						postData.searchItem = {
+							id:self.mainData[index].id
+						},
+					  postData.data = {
+							stock_day:self.submitData[index].count
+						};
+					  const callback = (data)=>{
+						console.log('index',index)
+					    if(data.solely_code==100000){
+					     alert('修改成功');
+								self.isEdit[index] = false;
+								self.mainData[index].stock_day = self.submitData[index].count;
+					    }else{
+					      alert(data.msg,'none')
+					    };
+						
+					  };
+					  window.base.productUpdate(postData,callback);
+					},
+					
+			
+					
+					submit(e) {
+						const self = this;
+						var index = window.base.getDataSet(e,'index').index;
+						if (self.submitData[index].count!='') {
+							if(self.submitData[index].count<self.mainData[index].stock){
+								self.productUpdate(index);
+							}else{
+								alert('不能大于总库存！');	
+							}
+								
+						
+						} else {
+							
+							alert('请输入库存');	
+						};
+					},
+					
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'
+					},
+					
+		
+					intoDetail(url,id) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					},
+		
+				}
+		
+			});
+		</script>
 		
 	</body>
 </html>

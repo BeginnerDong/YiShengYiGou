@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>添加地址</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,25 +23,27 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
-		<link rel="stylesheet" type="text/css" href="GXcss/address.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
+	
 		<style type="text/css">
-			body{
+			body {
 				background: #fff;
 			}
-			
-			.save-box{
+
+			.save-box {
 				height: 50px;
 				width: 100%;
 				border-bottom: solid 1px #EAEAEA;
 				line-height: 50px;
-				
+
 			}
-			.save-box span{
+
+			.save-box span {
 				margin-left: 6px;
 			}
-			button{
+
+			button {
 				width: 60%;
 				height: 30px;
 				margin: 80px auto 20px;
@@ -49,43 +51,212 @@
 		</style>
 	</head>
 	<body>
-		<div class="save-box">
-			<div class="ilblock color1 font14"style="margin-left: 15px;">
-				收货人
+		<div id="app">
+			<div class="save-box">
+				<div class="ilblock color1 font14" style="margin-left: 15px;">
+					收货人
+				</div>
+				<input class="color2 " placeholder="请输入真实姓名" style="border: none;height: 90%; margin-left: 18px;" v-model="submitData.name" />
 			</div>
-			<input class="color2 font10" placeholder="请输入真实姓名" style="border: none;height: 90%; margin-left: 18px;"/>
-		</div>
-		<div class="save-box">
-			<div class="ilblock color1 font14"style="margin-left: 15px;">
-				手机号码
+			<div class="save-box">
+				<div class="ilblock color1 font14" style="margin-left: 15px;">
+					手机号码
+				</div>
+				<input class="color2 " placeholder="请输入真实姓名" style="border: none;height: 90%; margin-left: 18px;" v-model="submitData.phone" />
 			</div>
-			<div class="color2 font10 ilblock flo-right" style="width: 60px; 
-				background: url(imgs/about-icon5.png) no-repeat 32px center;
-				background-size: 10%;
-			">+86</div>
-		</div>
-		<div class="save-box">
-			<div class="ilblock color1 font14"style="margin-left: 15px;">
-				所在地区
+			<div class="save-box">
+				<div class="ilblock color1 font14" style="margin-left: 15px;">
+					所在地区
+				</div>
+				<div id="city" class="ilblock" style="border: none;height: 90%; margin-left: 18px;"> 
+					<select class="prov" v-model="prov"></select>  
+					<select class="city" disabled="disabled" v-model="city"></select>
+				</div>
 			</div>
-			<input class="color2 font10" placeholder="请选择" style="border: none;height: 90%; margin-left: 18px;"/>
-		</div>
-		<div class="save-box">
-			<div class="ilblock color1 font14"style="margin-left: 15px;">
-				详细地址：
+			<div class="save-box">
+				<div class="ilblock color1 font14" style="margin-left: 15px;">
+					详细地址：
+				</div>
+				<input class="color2" placeholder="如街道、门牌号" style="border: none;height: 90%;" v-model="submitData.detail" />
 			</div>
-			<input class="color2" placeholder="如街道、门牌号" style="border: none;height: 90%;"/>
-		</div>
-		<div class="save-box">
-			<div class="ilblock color1 font14"style="margin-left: 15px;">
-				设为默认地址
+			<div class="save-box">
+				<div class="ilblock color1 font14" style="margin-left: 15px;">
+					设为默认地址
+				</div>
+				<div class="ilblock flo-right" @click="choose">
+					<img :src="submitData.isdefault==1?'imgs/address-icom5.png':'imgs/address-icom4.png'" style="width: 50px; margin-right: 15px;" />
+				</div>
+
 			</div>
-			<div class="ilblock flo-right">
-				<img src="imgs/address-icom4.png" style="width: 50px; margin-right: 15px;" />
-			</div>
-		</div>
 		
-		<button class="bg3 radiu20" style="color: #fff;" type="button">保存</button>
+		<button class="bg3 radiu20" style="color: #fff;" type="button" @click="buttonCanClick?submit():''">保存</button>
+		</div>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.cityselect.js"></script>
 		
+		<script type="text/javascript">
+			console.log('$("#city").citySelect',$("#city").citySelect)
+			$(function(){
+				$("#city").citySelect({
+					nodata:"none",
+					required:false
+				}); 
+			});
+		</script>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						isDefalut: true,
+						submitData: {
+							name: '',
+							phone: '',
+							city: '',
+							detail: '',
+							isdefault: 1
+						},
+						buttonCanClick: true,
+						prov:'',
+						city:'',
+						dist:''
+					}
+		
+				},
+				mounted() {
+		
+				},
+				computed: {
+		
+				},
+				created: function() {
+				
+			
+				
+					var callback = (res) => {
+						if (window.base.GetRequest().id) {
+							this.getMainData(window.base.GetRequest().id)
+						}
+					};
+					window.base.getUserToken(callback);
+					
+					
+				},
+		
+				methods: {
+		
+					getMainData(id) {
+						const self = this;
+						const postData = {};
+						postData.searchItem = {};
+						postData.searchItem.id = id;
+					
+							postData.token = localStorage.getItem('user_token');
+						
+						const callback = (res) => {
+							console.log(res);
+							self.submitData.phone = res.info.data[0].phone;
+							self.submitData.name = res.info.data[0].name;
+							self.submitData.detail = res.info.data[0].detail;
+							self.submitData.city = res.info.data[0].city;
+							self.submitData.isdefault = res.info.data[0].isdefault;
+						};
+						window.base.addressGet(postData, callback);
+					},
+		
+		
+		
+					addressUpdate() {
+						const self = this;
+						const postData = {};
+						
+						postData.token = localStorage.getItem('user_token');
+						
+						postData.searchItem = {};
+						postData.searchItem.id = window.base.GetRequest().id;
+						postData.data = {};
+						postData.data = window.base.cloneForm(self.submitData);
+		
+						const callback = (data) => {
+							
+							if (data && data.solely_code == 100000) {
+								alert('修改成功');
+								window.location.href = 'address.html'
+							} else {
+								alert(data.msg)
+							};
+							self.buttonCanClick = true;
+						};
+						window.base.addressUpdate(postData, callback);
+					},
+		
+		
+					addressAdd() {
+						const self = this;
+						const postData = {};
+						
+						postData.token = localStorage.getItem('user_token');
+						
+						postData.data = {};
+						postData.data = window.base.cloneForm(self.submitData);
+		
+						const callback = (data) => {
+							
+							if (data && data.solely_code == 100000) {
+								alert('添加成功');
+								window.location.href = 'address.html'
+							} else {
+								alert(data.msg)
+							}	
+							self.buttonCanClick = true;
+						};
+						window.base.addressAdd(postData, callback);
+					},
+		
+		
+					submit() {
+						const self = this;
+						self.buttonCanClick = false;
+						var phone = self.submitData.phone;
+						const pass = window.base.checkComplete(self.submitData);
+		
+						console.log('self.data.sForm', self.submitData)
+						console.log('pass', pass)
+						if (pass) {
+							if (phone.trim().length != 11 || !/^1[3|4|5|6|7|8|9]\d{9}$/.test(phone)) {
+								self.buttonCanClick = true;
+								alert('手机格式不正确')
+							} else {
+								if (window.base.GetRequest().id) {
+		
+									self.addressUpdate();
+								} else {
+		
+									self.addressAdd();
+								}
+		
+							}
+						} else {
+							self.buttonCanClick = true;
+							alert('请补全信息');
+						};
+					},
+		
+		
+					choose() {
+						const self = this;
+						
+						if (self.submitData.isdefault==1) {
+							self.submitData.isdefault = 2
+						} else {
+							self.submitData.isdefault = 1
+						}
+						console.log('self.submitData.isdefault', self.submitData.isdefault)
+					},
+		
+				}
+		
+			});
+		</script>
 	</body>
 </html>

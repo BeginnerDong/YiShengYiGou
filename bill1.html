@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 	<head>
-		<title>攻略</title>
+		<title></title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,75 +23,19 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
+
 		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			.box-one {
-				width: 345px;
-				height: 165px;
-				margin: 3.3% 3.6% 0;
-				padding: 15px;
-			}
 
-			.img-box {
-				width: 100px;
-				height: 70px;
-				margin: 3px 2px 0px 0px;
-				overflow: hidden;
-				background: #AAAAAA;
-			}
-
-			.img-box img {
-				width: 100px;
-				height: 70px;
-			}
 		</style>
 	</head>
 	<body>
 		<div id="app">
-			<div v-for="item in mainData" @click="intoDetail('strategy-content',item.id)">
-				<div class="box-one bg1 overflow0">
-					<div class="color1 font15 overflow1">
-						{{item.title}}
-					</div>
-					<div class="color2 overflow2" style="height:44px;">
-						{{item.description}}
-					</div>
-					<div class="img-box ilblock" v-for="c_item in item.mainImg">
-						<img :src="c_item.url" />
-					</div>
-				</div>
-			</div>
-
-
-
-
-			<div style="width: 100%;height: 80px;"></div>
-			<div class="navbar-brand">
-				<ul>
-					<li>
-						<a href="index.html">
-							<div class="navbar-img"><img src="imgs/nabar1.png" /></div>
-							<div>首页</div>
-						</a>
-					</li>
-					<li>
-						<a href="calculate.html">
-							<div class="navbar-img"><img src="imgs/nabar2.png" /> </div>
-							<div>聚划算</div>
-						</a>
-					</li>
-					<li>
-						<a href="strategy.html">
-							<div class="navbar-img"><img src="imgs/nabar3-a.png" /> </div>
-							<div style="color: #F20C3E;">攻略</div>
-						</a>
-					</li>
-					<li><a href="user.html">
-							<div class="navbar-img"><img src="imgs/nabar4.png" /></div>
-							<div>我的</div>
-						</a></li>
-				</ul>
+			<div style="width: 100%;">
+				<img :src="mainData.posterImg&&mainData.posterImg[0]?mainData.posterImg[0].url:''" style="width: 100%;" />
+				<button class="radiu50" style="position: fixed; width: 37px; height: 37px;top: 31px;left: 1px; background: rgba(0,0,0,0); ">
+					<img src="imgs/bill1.png" style="border: none; width: 37px; height: 37px;" />
+				</button>
 			</div>
 		</div>
 		<script type="text/babel">
@@ -99,11 +43,11 @@
 				el: '#app',
 				data: function() {
 					return {
-						sliderData: [],
+					
 						buttonClick: false,
 						isLoadAll: false,
 						mainData: [],
-						nowTime:'',
+				
 						paginate:{
 							count: 0,
 							currentPage: 1,
@@ -112,9 +56,9 @@
 						},
 						searchItem:{
 							thirdapp_id:2,
-							
+							type:1
 						},
-						
+						isShow:false
 					}
 		
 				},
@@ -131,66 +75,64 @@
 				},
 				
 				created: function() {
-					var callback = (res)=>{
-					  
-					 this.init()
-					  
-					};
-					window.base.getUserToken(callback);
 					
+						var callback = (res)=>{
+						  
+						 this.init()
+						  
+						};
+						window.base.getUserToken(callback);
 					
 					
 				},
+				
 		
-		
+				
 		
 				methods: {
 					
+			
+					
 					init(){
 						const self = this;
-						self.nowTime = Date.parse(new Date());
+	
 						console.log(self.nowTime)
 						this.getMainData();
+						this.getQrData()
 					},
 		
-					handleScroll() {
-						var wScrollY = window.scrollY; // 当前滚动条位置  
-						var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
-						var bScrollH = document.body.scrollHeight; // 滚动条总高度      
-						if ((wScrollY + wInnerH >= bScrollH) && !this.isLoadAll && !this.buttonClick) {
-							this.buttonClick = true;
-							this.paginate.currentPage++;
-							this.getMainData();
-						};
-					},
-		
-					getMainData(isNew) {
+
+					
+					getMainData() {
 						const self = this;
-						if (isNew) {
-							self.mainData = [];
-							self.paginate = {
-								count: 0,
-								currentPage: 1,
-								pagesize: 6,
-								is_page: true,
+						const postData = {
+							searchItem: {
+								id: window.base.GetRequest().id,
 							}
 						};
-						const postData = {};
-						postData.paginate = window.base.cloneForm(self.paginate);
-						postData.searchItem = window.base.cloneForm(self.searchItem);
-					
 						const callback = (res) => {
 							if (res.info.data.length > 0) {
-								self.mainData.push.apply(self.mainData, res.info.data)
+								self.mainData = res.info.data[0];							
 							} else {
-								self.isLoadAll = true;
-								alert('没有更多了');
-							};
-
+								alert('数据错误')
+							};	
 						};
-						window.base.articleGet(postData, callback);
+						window.base.productGet(postData, callback);
 					},
 					
+					getQrData(){
+					    const self = this;
+					    const postData = {};
+					    postData.token = localStorage.getItem('user_token');
+					    postData.param = 'calculate-store.html?id='+window.base.GetRequest().id+'&user_no='+localStorage.getItem('user_no');
+					    postData.ext = 'png';
+					    const callback = (res)=>{
+					      console.log(res);
+					      self.QrData = res.info;
+					      console.log(9990,self.QrData)
+					    };
+					    window.base.getQrCommonCode(postData,callback);
+					},
 		
 					intoPath(url) {
 						console.log(url);
@@ -209,7 +151,5 @@
 		
 			});
 		</script>
-
 	</body>
-
 </html>

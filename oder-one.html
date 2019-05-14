@@ -1,98 +1,261 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title</title>
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
-		<link href="css/basic.css" rel="stylesheet" type="text/css" />
-		<link href="css/style.css" rel="stylesheet" type="text/css" />
-		<link href="css/responsive.css" rel="stylesheet" type="text/css" />
-		<link href="css/wxParse.css" rel="stylesheet" />
-		<link href="css/font-awesome.min.css" rel="stylesheet">
-		<script src="js/rem.js"></script>
-		<script src="js/include.js"></script>
-		<link rel="stylesheet" href="css/css/magic.css">
-		<link rel="stylesheet" href="css/animate/animate.min.css">
-		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-		<script src="js/browser.min.js"></script>
-		<script src="js/base.js" type="application/javascript"></script>
-		<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-		<script type="text/javascript " src="js/bootstrap.js"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
-		<!-- <script src="js/jquery.stellar.js"></script> -->
-		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
-		<link rel="stylesheet" type="text/css" href="YSG.css/order.css"/>
-		<style type="text/css">
-			.storebox{
-				height: 205px;
-			}
-		</style>
-		
+		<title>我的订单</title> <meta http-equiv="x-ua-compatible" content="ie=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+			<link href="css/basic.css" rel="stylesheet" type="text/css" />
+			<link href="css/style.css" rel="stylesheet" type="text/css" />
+			<link href="css/responsive.css" rel="stylesheet" type="text/css" />
+			<link href="css/wxParse.css" rel="stylesheet" />
+			<link href="css/font-awesome.min.css" rel="stylesheet">
+			<script src="js/rem.js"></script>
+			<script src="js/include.js"></script>
+			<link rel="stylesheet" href="css/css/magic.css">
+			<link rel="stylesheet" href="css/animate/animate.min.css">
+			<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+			<script src="js/browser.min.js"></script>
+			<script src="js/base.js" type="application/javascript"></script>
+			<script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
+			<script type="text/javascript " src="js/bootstrap.js"></script>
+			<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
+			<!-- <script src="js/jquery.stellar.js"></script> -->
+			<script src="js/jquery.waypoints.min.js"></script>
+			<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
+			<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
+			<link rel="stylesheet" type="text/css" href="YSG.css/order.css" />
+			<style type="text/css">
+				.storebox {
+					height: 205px;
+				}
+			</style>
+
 	</head>
 	<body>
-		
+		<div id="app">
 		<div class="nav-top" style="line-height: 40px;">
-			<div class="ilblock font15 top-list top-list-star ">
-				<a href="store-all.html" class="color5">待支付</a>
+			<div class="ilblock font15 top-list" :class="currentId == 0?'top-list-star':''" @click="tab('0')">
+				<span :class="currentId == 0?'color5':'color3'">待支付</span>
+			
 			</div>
-			<div class="ilblock font15 top-list">
-				<a href="oder-two.html" class="color3">未核销</a>
+			<div class="ilblock font15 top-list" :class="currentId == 1?'top-list-star':''" @click="tab('1')" >
+				<span :class="currentId == 1?'color5':'color3'">未核销</span>
+		
 			</div>
-			<div class="ilblock font15 top-list">
-				<a class="color3" href="oder-three.html">已核销</a>
+			<div class="ilblock font15 top-list" :class="currentId == 2?'top-list-star':''" @click="tab('2')">
+				<span :class="currentId == 2?'color5':'color3'">已核销</span>
+				
 			</div>
 		</div>
-		<div class="storebox bg1" style="margin-top: 0px;">
+	
+		<div class="storebox bg1" style="margin-top: 0px;border-bottom: 10px solid #f2f2f2;" v-for="item in mainData">
 			<div class="storebox-top">
 				<div class="font12 color1 ilblock" style="margin-left: 15px;">
-					<div class="color1 font13" style="line-height: 30px;">核销码：5689</div>
-					<div class="color2 font10" style="line-height: 15px;">交易时间：2018-08-30</div>
+					<div class="color1 font13" style="line-height: 30px;">核销码：{{item.check_no}}</div>
+					<div class="color2 font10" style="line-height: 15px;">交易时间：{{item.create_time}}</div>
 				</div>
-				<div class="ilblock font11 color5 flo-right"style="margin-right: 15px; line-height: 30px;" >待支付</div>
+				<div class="ilblock font11 color5 flo-right" style="margin-right: 15px; line-height: 30px;" v-if="item.pay_status==0">待支付</div>
+				<div class="ilblock font11 color5 flo-right" style="margin-right: 15px; line-height: 30px;" v-if="item.behavior==1&&item.pay_status==1">待核销</div>
+				<div class="ilblock font11 color5 flo-right" style="margin-right: 15px; line-height: 30px;" v-if="item.behavior==2&&item.pay_status==1">已核销</div>
 			</div>
 			<div class="storebox-btm">
 				<div class="ilblock img-box">
-					<img src="imgs/组9@2x.png" />
+					<img :src="item.products[0]&&item.products[0].snap_product&&item.products[0].snap_product.mainImg&&item.products[0].snap_product.mainImg[0]?item.products[0].snap_product.mainImg[0].url:''" />
 				</div>
 				<div class="ilblock imgname">
 					<div class="font14 color1 overflow1" style="margin-top: 5px; height: 45px;">
-						标题标题标题标题标题标题
+						{{item.products[0]&&item.products[0].snap_product?item.products[0].snap_product.title:''}}
 					</div>
-					<div class="color5" style="font-size: 12px; margin-top: 16px;">￥566.00 <span class="color3" style="margin-left: 10px;">x1</span> </div>
+					<div class="color5" style="font-size: 12px; margin-top: 16px;">￥{{item.price}}<span class="color3" style="margin-left: 10px;">x{{item.products[0].count}}</span>
+					</div>
 				</div>
 			</div>
-			<div style="width: 100%;padding: 15px; height: 50px;">
+			<div style="width: 100%;padding: 15px; height: 50px;" v-if="item.pay_status==0">
 				<div class="font13 ilblock flo-right" style="color: rgba(33,33,33,0.8);text-align:center;line-height: 22px; border: solid 1px #CDCDCD; width: 70px;height: 25px;">去支付</div>
 			</div>
-		</div>
-		<div class="storebox bg1">
-			<div class="storebox-top">
-				<div class="font12 color1 ilblock" style="margin-left: 15px;">
-					<div class="color1 font13" style="line-height: 30px;">核销码：5689</div>
-					<div class="color2 font10" style="line-height: 15px;">交易时间：2018-08-30</div>
+			<div style="width: 100%;padding: 10px 15px 5px; height: 55px;" v-if="currentId == 1">
+				<div class="ilblock flo-left" >
+					<img src="imgs/details-icon4.png" style="width: 14px;position: relative;top: 8px;"/>
 				</div>
-				<div class="ilblock font11 color5 flo-right"style="margin-right: 15px; line-height: 30px;" >待支付</div>
-			</div>
-			<div class="storebox-btm">
-				<div class="ilblock img-box">
-					<img src="imgs/组9@2x.png" />
+				<div class="ilblock flo-left" style="margin-left: 12px;">
+					<div class="color3 font12">{{item.merchant&&item.merchant[0]?item.merchant[0].login_name:''}}</div>
+					<div class="color2 font9" style="line-height: 25px;">{{item.merchant&&item.merchant[0]&&item.merchant[0].info?item.merchant[0].info.address:''}}</div>
 				</div>
-				<div class="ilblock imgname">
-					<div class="font14 color1 overflow1" style="margin-top: 5px; height: 45px;">
-						标题标题标题标题标题标题
-					</div>
-					<div class="color5" style="font-size: 12px; margin-top: 16px;">￥566.00 <span class="color3" style="margin-left: 10px;">x1</span> </div>
+				<div class="ilblock flo-right">
+					<img src="imgs/details-icon5.png" style="width:20px; position: relative;top: 8px;"/>
 				</div>
-			</div>
-			<div style="width: 100%;padding: 15px; height: 50px;">
-				<div class="font13 ilblock flo-right" style="color: rgba(33,33,33,0.8);text-align:center;line-height: 22px; border: solid 1px #CDCDCD; width: 70px;height: 25px;">去支付</div>
 			</div>
 		</div>
+		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						currentId: 0,
+						mainData: [],
+						paginate: {
+							count: 0,
+							currentPage: 1,
+							pagesize: 10,
+							is_page: true,
+						},
+						searchItem:{
+							pay_status:0
+						}
+					}
+		
+				},
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					const self = this;
+				
+					var callback = (res)=>{
+					  
+					  self.getMainData()
+					  
+					};
+					window.base.getUserToken(callback);
+					
+				},
+		
+				methods: {
+					
+					handleScroll() {
+						var wScrollY = window.scrollY; // 当前滚动条位置  
+						var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+						var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+						if ((wScrollY + wInnerH >= bScrollH) && !this.isLoadAll && !this.buttonClick) {
+							this.buttonClick = true;
+							this.paginate.currentPage++;
+							this.getMainData();
+						};
+					},
+		
+					getMainData(isNew) {
+						const self = this;
+						if (isNew) {
+							self.paginate = {
+								count: 0,
+								currentPage: 1,
+								pagesize: 10,
+								is_page: true,
+							}
+						};
+						const postData = {};
+						postData.paginate = window.base.cloneForm(self.paginate);
+						postData.token=localStorage.getItem('user_token');
+						postData.searchItem = window.base.cloneForm(self.searchItem);
+						postData.searchItem.user_no= localStorage.getItem('user_no');
+						postData.searchItem.status = ['in',[1,-1]]
+						postData.order = {
+							create_time: 'desc'
+						};
+						postData.getAfter = {
+							merchant:{
+								tableName:'User',
+								middleKey:'relation_user',
+								key:'user_no',
+								searchItem:{
+									status:1
+								},
+								condition:'='
+							},
+						}
+						const callback = (res) => {
+							if (res.solely_code == 100000) {
+								if (res.info.data.length > 0) {
+									self.mainData.push.apply(self.mainData, res.info.data);
+								} else {
+									self.isLoadAll = true;
+									alert('没有更多了');
+								};
+		
+							} else {
+								alert('网络故障')
+							};
+							
+							
+							console.log('getMainData', self.mainData)
+						};
+						window.base.orderGet(postData, callback);
+					},
+		
+					deleteOrder(e) {
+						const self = this;
+						const postData = {};
+						postData.token = localStorage.getItem('user_token');
+						postData.searchItem = {};
+						postData.searchItem.id = window.base.getDataSet(e, 'id').id;
+						const callback = res => {
+							if (res.solely_code == 100000) {
+								self.mainData = [];
+								self.getMainData(true);
+							}
+					
+						};
+						window.base.orderDelete(postData, callback);
+					},
+		
+					orderUpdate(e) {
+						const self = this;
+						var index = window.base.getDataSet(e, 'index');
+						console.log('index', index)
+						const postData = {};
+						postData.token = localStorage.getItem('user_token');
+						postData.data = {
+							transport_status: 2,
+						}
+						postData.searchItem = {};
+						postData.searchItem.id = window.base.getDataSet(e, 'id').id;
+					
+						const callback = res => {
+							alert('已收货')
+							self.mainData = [];
+							self.getMainData(true);
+						};
+						window.base.orderUpdate(postData, callback);
+					},
 		
 		
+					tab(currentId) {
+						const self = this;
+						self.currentId = currentId;
+						self.searchItem = {};
+						if (currentId == '0') {
+					
+						} else if (currentId == '1') {
+							self.searchItem.pay_status = '1';
+							self.searchItem.behavior = '1';
+						} else if (currentId == '2') {
+							self.searchItem.pay_status = '1';
+							self.searchItem.behavior = '2';
+						} 
+						self.mainData = [];
+						self.getMainData(true);
+					
+					},
+		
+					intoPath(url,id) {
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					}
+		
+				}
+		
+			});
+		</script>
+
 	</body>
 </html>

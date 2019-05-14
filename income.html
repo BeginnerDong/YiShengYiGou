@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>我的收益</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,102 +24,220 @@
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
 		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			.top{
+			.top {
 				width: 100%;
-				height:137px ;
+				height: 137px;
 				padding-top: 40px;
 			}
-			.list-item{
+
+			.list-item {
 				width: 100%;
 				height: 65px;
 				border-bottom: solid 1px #EFEFEF;
 			}
-			.img-box{
-				width: 40px; 
+
+			.img-box {
+				width: 40px;
 				height: 40px;
 				margin-top: 13px;
 			}
-			.img-box img{
-				width: 40px; 
+
+			.img-box img {
+				width: 40px;
 				height: 40px;
 			}
 		</style>
 	</head>
 	<body>
+	<div id="app">
 		<div class="top bg3">
-			<div style="font-size: 25px; color:#fff; text-align: center;">￥456.56</div>
+			<div style="font-size: 25px; color:#fff; text-align: center;">￥{{userData.info.balance}}</div>
 			<div class="font13 radiu20 bg1" style="width: 60px; height: 22px; text-align: center; line-height: 22px; margin: 10px auto;">
 				<a class="color1" href="income-next.html">提现</a>
 			</div>
 		</div>
 		<div style="width: 100%;padding: 0px 15px;">
-			<div class="list-item">
+			
+			<div class="list-item" v-for="item in mainData" v-if="item.relation_id==''">
 				<div class="ilblock flo-left" style="width: 50%;">
 					<div class="font14 color1" style="line-height: 40px;">
-						提现
-					</div>
-					<div class="font12 ilblock" style="color: rgb(153,153,153); line-height: 10px;">
-						2019.02.23
-					</div>
-				</div>
-				<div class="ilblock flo-right font13 color3" style="width: 50%; line-height: 65px; text-align: right;">
-					-￥56.23
-				</div>
-			</div>
-			<div class="list-item">
-				<div class="ilblock flo-left" style="width: 50%;">
-					<div class="font14 color1" style="line-height: 40px;">
-						提现
+						{{item.trade_info}}
 					</div>
 					<div class="font12" style="color: rgb(153,153,153); line-height: 10px;">
-						2019.02.23
+						{{item.create_time}}
 					</div>
 				</div>
 				<div class="ilblock flo-right font13 color3" style="width: 50%; line-height: 65px; text-align: right;">
-					-￥56.23
+					￥{{item.count}}
 				</div>
 			</div>
-			
-			<div class="list-item">
+
+			<div class="list-item" v-for="item in mainData" v-if="item.relation_id!=''">
 				<div class="ilblock flo-left" style="width: 35%;">
 					<div class="img-box ilblock overflow0 radiu50">
-						<img src="imgs/home-img.png" />
+						<img :src="item.merchant.headImgUrl" />
 					</div>
 					<div class="ilblock " style="color: rgb(153,153,153);">
-						<div class="color3" style="line-height: 32px;">昵称昵称</div>
-						<div class="color2" >2019.02.23</div>
+						<div class="color3" style="line-height: 32px;">{{item.merchant.nickname}}</div>
+						<div class="color2">{{item.create_time}}</div>
 					</div>
 				</div>
 				<div class="ilblock flo-left font13 color3" style="width: 35%; text-align: center;">
-					<div class="color3" style="margin-top: 15px;">美味小龙虾</div>
-					<div class="color2" style="line-height: 25px;">￥233.56</div>
+					<div class="color3" style="margin-top: 15px;">{{item.product.title}}</div>
+					<div class="color2" style="line-height: 25px;">￥{{item.product.price}}</div>
 				</div>
 				<div class="ilblock flo-left font13 color5" style="width: 30%; line-height: 65px; text-align: right;">
-					+￥56.23
-				</div>
-			</div>
-			
-			<div class="list-item">
-				<div class="ilblock flo-left" style="width: 35%;">
-					<div class="img-box ilblock overflow0 radiu50">
-						<img src="imgs/home-img.png" />
-					</div>
-					<div class="ilblock " style="color: rgb(153,153,153);">
-						<div class="color3" style="line-height: 32px;">昵称昵称</div>
-						<div class="color2" >2019.02.23</div>
-					</div>
-				</div>
-				<div class="ilblock flo-left font13 color3" style="width: 35%; text-align: center;">
-					<div class="color3" style="margin-top: 15px;">美味小龙虾</div>
-					<div class="color2" style="line-height: 25px;">￥233.56</div>
-				</div>
-				<div class="ilblock flo-left font13 color5" style="width: 30%; line-height: 65px; text-align: right;">
-					+￥56.23
+					￥{{item.count}}
 				</div>
 			</div>
 		</div>
+		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						currentId: 0,
+						userData:[],
+						mainData: [],
+						paginate: {
+							count: 0,
+							currentPage: 1,
+							pagesize: 10,
+							is_page: true,
+						},
+						searchItem:{
+							type:2
+						}
+					}
 		
+				},
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					const self = this;
+				
+					var callback = (res)=>{
+					  self.userGet();
+					  self.getMainData()
+					  
+					};
+					window.base.getUserToken(callback);
+					
+				},
+		
+				methods: {
+					
+					handleScroll() {
+						var wScrollY = window.scrollY; // 当前滚动条位置  
+						var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+						var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+						if ((wScrollY + wInnerH >= bScrollH) && !this.isLoadAll && !this.buttonClick) {
+							this.buttonClick = true;
+							this.paginate.currentPage++;
+							this.getMainData();
+						};
+					},
+					
+					userGet() {
+						const self = this;
+						const postData = {
+							token: localStorage.getItem('user_token'),
+							thirdapp_id: 2
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.userData = res.info.data[0]
+							} else {
+								alert('数据错误')
+							}
+							console.log(self.userData)
+						}
+						window.base.userGet(postData, callback);
+					},
+		
+					getMainData(isNew) {
+						const self = this;
+						if (isNew) {
+							self.paginate = {
+								count: 0,
+								currentPage: 1,
+								pagesize: 10,
+								is_page: true,
+							}
+						};
+						const postData = {};
+						postData.paginate = window.base.cloneForm(self.paginate);
+						postData.token=localStorage.getItem('user_token');
+						postData.searchItem = window.base.cloneForm(self.searchItem);
+						postData.searchItem.user_no= localStorage.getItem('user_no');
+						postData.searchItem.status = ['in',[0,1,-1]]
+						postData.order = {
+							create_time: 'desc'
+						};
+						postData.getAfter = {
+							merchant:{
+								tableName:'User',
+								middleKey:'relation_user',
+								key:'user_no',
+								searchItem:{
+									status:1
+								},
+								condition:'=',
+								info:['headImgUrl','nickname']
+							},
+							product:{
+								tableName:'Product',
+								middleKey:'relation_id',
+								key:'id',
+								searchItem:{
+									status:1
+								},
+								condition:'=',
+								info:['title','price']
+							},
+						}
+						const callback = (res) => {
+							if (res.solely_code == 100000) {
+								if (res.info.data.length > 0) {
+									self.mainData.push.apply(self.mainData, res.info.data);
+								} else {
+									self.isLoadAll = true;
+									alert('没有更多了');
+								};
+		
+							} else {
+								alert('网络故障')
+							};
+							
+							
+							console.log('getMainData', self.mainData)
+						};
+						window.base.flowLogGet(postData, callback);
+					},
+		
+					
+		
+					intoPath(url,id) {
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					}
+		
+				}
+		
+			});
+		</script>
+
 	</body>
 </html>

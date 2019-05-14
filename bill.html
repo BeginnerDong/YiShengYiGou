@@ -23,19 +23,165 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			
+
 		</style>
 	</head>
-	<body>
-		<div style="width: 100%;">
-			<img src="imgs/微信图片_20190430182148.png" style="width: 100%;" />
-			<button class="radiu50" style="position: fixed; width: 37px; height: 37px;top: 31px;left: 1px; background: rgba(0,0,0,0); ">
-				<img src="imgs/微信图片_20190505101904.png" style="border: none; width: 37px; height: 37px;" />
-			</button>
+	<script type="text/javascript" src="js/html2canvas.js"></script>
+	<script>
+
+	</script>
+	<body id="contbox">
+
+		<div id="app">
+
+			<div style="padding:10px 0">
+				<div class="btn" id="btn" @click="test">截取屏幕</div>
+				<p style="color:red; text-align:center;">先点击截取屏幕后再点击截图下载</p>
+				<div style="margin-top:10px">
+					<a href="javascript:;" rel="external nofollow" class="btn" id="download">截图下载</a>
+				</div>
+			</div>
+			<div v-if="isShow">
+				<image :src="url"/>
+			</div>
+			<div style="width: 100%" id="test" style="display: none;">
+				<img :src="mainData.posterImg&&mainData.posterImg[0]?mainData.posterImg[0].url:''" style="width: 100%;" />
+				<button class="radiu50" style="position: fixed; width: 37px; height: 37px;top: 100px;left: 1px; background: rgba(0,0,0,0); ">
+					<img src="imgs/bill1.png" style="border: none; width: 37px; height: 37px;" />
+				</button>
+				<button style="position: absolute;top: 100px;left: 1px; background: rgba(0,0,0,0); ">
+					<img :src="QrData.url" />
+				</button>
+			</div>
 		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+					
+						buttonClick: false,
+						isLoadAll: false,
+						mainData: [],
+						QrData:[],
+						paginate:{
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+						searchItem:{
+							thirdapp_id:2,
+							type:1
+						},
+						isShow:false,
+						url:''
+					}
+		
+				},
+				
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					
+						var callback = (res)=>{
+						  
+						 this.init()
+						  
+						};
+						window.base.getUserToken(callback);
+					
+					
+				},
+				
+		
+				
+		
+				methods: {
+					
+					test(){
+						const self = this;
+					
+					
+						html2canvas(document.getElementById("test"),{ width:375,height:667 }).then(function(canvas){
+							var imgUrl = canvas.toDataURL();
+							self.url = imgUrl;
+							if(imgUrl){
+								self.isShow = true
+							}
+						});	
+						
+					},
+					
+					init(){
+						const self = this;
+	
+						console.log(self.nowTime)
+						this.getMainData();
+						this.getQrData()
+					},
+		
+
+					
+					getMainData() {
+						const self = this;
+						const postData = {
+							searchItem: {
+								id: window.base.GetRequest().id,
+							}
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData = res.info.data[0];							
+							} else {
+								alert('数据错误')
+							};	
+						};
+						window.base.productGet(postData, callback);
+					},
+					
+					getQrData(){
+					    const self = this;
+					    const postData = {};
+					    postData.token = localStorage.getItem('user_token');
+					    postData.param = 'store.html?id='+window.base.GetRequest().id+'&user_no='+localStorage.getItem('user_no');
+					    postData.ext = 'png';
+					    const callback = (res)=>{
+					      console.log(res);
+					      self.QrData = res.info;
+					      console.log(9990,self.QrData)
+					    };
+					    window.base.getQrCommonCode(postData,callback);
+					},
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'
+					},
+					
+		
+					intoDetail(url,id) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					},
+		
+				}
+		
+			});
+		</script>
 	</body>
 </html>
-  

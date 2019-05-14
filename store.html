@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-		<head>
-		<title></title>
+	<head>
+		<title>商品详情</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -23,165 +23,389 @@
 		<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true&ak=M9C0DhYUo81Io76oZlaPQ1xoZcycRqwB"></script>
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
-		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
+		<script type="text/javascript" src="js/html2canvas.js"></script>
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
-			.bigimg{
+			.bigimg {
 				width: 100%;
-				height:200px;
+				height: 200px;
 				overflow: hidden;
 			}
-			.bigimg img{
+
+			.bigimg img {
 				width: 100%;
-				height:200px;
+				height: 200px;
 			}
-			.little{
+
+			.little {
 				width: 90px;
 				height: 109px;
 				border-radius: 8px;
 				overflow: hidden;
-				position: absolute;
+				position: fixed;
 				bottom: 60px;
 				left: 274px;
-				}
-				.navbar-brand{
-					width: 100%;
-					height: 52px;
-					position: fixed;
-					bottom: 0pxpx;
-					background: #EAEAEA;
-					font-size: 7px;
-					}
-				.navbar-brand ul li{
-					display: inline-block;
-					float: left;
-					width: 33.33%;
-					text-align: center;
-					height: 55px;
-					
-				}
-				.navbar-brand img{
-					width: 17px;
-					height: 16px;
-					margin-bottom: 3px;
-				}
-				.navbar-brand a{
-					color: #fff;
-					text-align: center;
-				}
-				#stor-top{
-					width: 100%;
-					position: fixed;
-					z-index: 100;
-					bottom: 0px;
-				}
+			}
+
+			.navbar-brand {
+				width: 100%;
+				height: 52px;
+				position: fixed;
+				bottom: 0pxpx;
+				background: #EAEAEA;
+				font-size: 7px;
+			}
+
+			.navbar-brand ul li {
+				display: inline-block;
+				float: left;
+				width: 33.33%;
+				text-align: center;
+				height: 55px;
+
+			}
+
+			.navbar-brand img {
+				width: 17px;
+				height: 16px;
+				margin-bottom: 3px;
+			}
+
+			.navbar-brand a {
+				color: #fff;
+				text-align: center;
+			}
+
+			#stor-top {
+				width: 100%;
+				position: fixed;
+				z-index: 100;
+				bottom: 0px;
+			}
+			.pic{
+				width:100%;
+				height:100%;
+				position: fixed;
+				top:0;
+				left:0;
+				z-index:10
+			}
+			.pic img{
+				width:100%;
+				height:100%;
+				
+			}
 		</style>
 	</head>
 	<body>
-		<div class="bigimg">
-			<img src="imgs/home-img1.png" />
-		</div>
-		<div class="bg1" style="padding: 15px;">
-			<div class="font14 color1">
-				标题标题标题标题标题标题标题标题标题标题标题标题标题
+		<div id="app">
+			<div class="pic" v-if="ishowPic">
+				<image :src="url" @click="closePic"/>
 			</div>
-			<div class="font16 color5" style="margin-top: 15px;">￥56.89<span class="font10 color2" style="text-decoration: line-through; margin-left: 10px;">门市价￥230</span> </div>
-			<div style="margin-top: 18px;">
-				<div class="color2 font12 ilblock">已售：56</div>
-				<div class="color2 font12 ilblock flo-right">库存：200</div>
+			<div style="width: 100%;position: absolute;z-index: -999;top: 0;" id="test" >
+				<img :src="mainData&&mainData.posterImg&&mainData.posterImg[0]?mainData.posterImg[0].url:''" style="width: 100%;" />
+				
+				<button style="width:1.3rem;height:1.3rem;position: absolute;top: 598px;left: 4px; background: rgba(0,0,0,0); ">
+					<img :src="QrData.url"  style="width:100%;height:100%"/>
+				</button>
 			</div>
-		</div>
-		<div class="bg1" style="margin-top: 10px; width: 100%;">
-			<div class="font15 color1" style="margin-left: 15px; border-bottom: solid 2px #F4F4F4; height: 40px; line-height: 40px;">
-				商家信息
-			</div>
-			<div style="width: 100%;padding: 10px 15px 5px; height: 55px;">
-				<div class="ilblock flo-left" >
-					<img src="imgs/details-icon4.png" style="width: 14px;position: relative;top: 8px;"/>
-				</div>
-				<div class="ilblock flo-left" style="margin-left: 12px;">
-					<div class="color3 font12">小蒙铜锅涮</div>
-					<div class="color2 font9" style="line-height: 25px;">西安市未央区凤城五路西安中学南门对面</div>
-				</div>
-				<div class="ilblock flo-right">
-					<img src="imgs/details-icon5.png" style="width:20px; position: relative;top: 8px;"/>
-				</div>
-			</div>
-		</div>
-		<div class="bg1" style="margin-top: 10px; width: 100%;">
-			<div class="font15 color1" style="margin-left: 15px; border-bottom: solid 2px #F4F4F4; height: 40px; line-height: 40px;">
-				详情信息
-			</div>
-			<div class="color3" style="width: 100%;padding: 10px 15px 5px; height: 45px; text-align: center;">
-				内容内容内容内容内容内容
-			</div>
-			<div class="overflow0" style="width:350px;height: 180px; margin: 0 auto; position: relative;">
-				<img src="imgs/details-img.png"  style="width:350px;height: 200px;"/>
-				<img src="imgs/details-icon8.png" style="position:absolute;top: 70px;left: 150px; width: 50px;" />
-			</div>
-			<div class="color3" style="widows: 100%; padding: 15px; text-align: center; line-height: 22px;">
-				内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容
-			</div>
-			<div class="overflow0" style="width:350px;height: 180px; margin: 0 auto;">
-				<img src="imgs/details-img.png"  style="width:350px;height: 200px;"/>
-			</div>
-			<div class="color3" style="widows: 100%; padding: 15px; text-align: center; line-height: 22px;">
-				内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容容内容内容内容内容内容内容内容内容
-			</div>
-		</div>
-		<div class="little bg1">
-			<div class="bg3 font9" style="color: #fff; height: 20px;text-align: center;line-height: 20px;">
-				分享链接
-			</div>
-			<div class="color5 bg1 font11" style="text-align: center;line-height: 30px; height: 30px; border-bottom: dashed 1px #F54A6F;">
-				返佣金￥5
-			</div>
-			<div class="font9 color3" style="text-align: center;margin-top: 10px;">
-				好友下单得佣金
-			</div>
-			<div>
-				<button class="bg3 radiu20" style="height: 25px;width: 80px; text-align: center;line-height: 25px; margin:6px auto"><a style="color: #fff;" href="#">立即分享</a></button>
-			</div>
-		</div>
-		<div class="navbar-brand">
-			<ul style="height: 55px;">
-				<li style="border-right: solid 1px #CCCCCC;">
-					<div class="navbar-img"><img src="imgs/details-icon6.png"/></div>
-					<div>返回首页</div>
-				</li>
-				<li >
-					<div class="navbar-img"><img src="imgs/details-icon7.png" /> </div>
-					<div>一键拨号</div>
-				</li>
-				<li class="bg3" style="line-height: 50px;position: relative; top: -15px; left: 15px;">
-				<a href="pay.html">
-					<div>立即购买</div>
-				</a>
-				</li>
-			</ul>
-		</div>
-		<div id="stor-top" style="display: none;">
-			<div style="width: 100%; height: 497px; background: rgba(0,0,0,0.5);"></div>
-			<div class="bg1" style="width: 100%; height: 170px;">
-				<div style="padding: 15px; margin-bottom: 10px;">
-					<img class="flo-right" style="width: 20px;" src="imgs/details-icon3.png" />
-					<div style="clear: both;"></div>
-				</div>
-				<a href="bill.html">
-					<div style="width: 60px;height: 80px; text-align: center; margin-left: 15px;">
-						<div style="width: 60px; height: 60px; overflow: hidden;">
-							<img src="imgs/details-icon1.png" style="width: 40px;"/>
+			<div class="banner" style="height:4rem" v-if="mainData.bannerImg&&mainData.bannerImg.length>0">
+				<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+					<ol class="carousel-indicators">
+						<li v-for="(item, index) in mainData.bannerImg" data-target="#carousel-example-generic" :data-slide-to="index" :class="index=='0'?'active':''"></li>
+					</ol>
+					<div class="carousel-inner" role="listbox">
+						<div class="item" v-for="(item, index) in mainData.bannerImg" :class="index=='0'?'active':''">
+							<img :src="item.url" style="height:4rem;width:100%"
+							 class="img-responsive banner_img">
 						</div>
-						<div class="font10 color2">生成海报</div>
 					</div>
-				</a>
-				<div class="ilblock" style="width: 60px;height: 80px; text-align: center; margin-left: 15px;">
-					<div style="width: 60px; height: 60px; overflow: hidden;">
-						<img src="imgs/details-icon2.png" style="width: 40px;"/>
+				</div>
+			</div>
+			<div class="banner" style="height:4rem;background: #fff;border-bottom:1px solid #f2f2f2" v-else>
+				
+			</div>
+			<div class="bg1" style="padding: 15px;">
+				<div class="font14 color1">
+					{{mainData.title}}
+				</div>
+				<div class="font16 color5" style="margin-top: 15px;">￥{{mainData.price}}<span class="font10 color2" style="text-decoration: line-through; margin-left: 10px;">门市价￥{{mainData.o_price}}</span>
+				</div>
+				<div style="margin-top: 18px;">
+					<div class="color2 font12 ilblock">已售：{{mainData.false_sale_count}}</div>
+					<div class="color2 font12 ilblock flo-right">库存：{{mainData.false_stock}}</div>
+				</div>
+			</div>
+			<div class="bg1" style="border-top: 10px solid #f2f2f2; width: 100%;">
+				<div class="font15 color1" style="margin-left: 15px; border-bottom: solid 2px #F4F4F4; height: 40px; line-height: 40px;">
+					商家信息
+				</div>
+				<div style="width: 100%;padding: 10px 15px 5px; height: 55px;">
+					<div class="ilblock flo-left" @click="map">
+						<img src="imgs/details-icon4.png" style="width: 14px;position: relative;top: 8px;" />
 					</div>
-					<div class="font10 color2">海报</div>
+					<div class="ilblock flo-left" style="margin-left: 12px;">
+						<div class="color3 font14">{{mainData.user[0].login_name}}</div>
+						<div class="color2 font12" style="line-height: 25px;">{{mainData.user[0].info.address}}</div>
+					</div>
+					<div class="ilblock flo-right" @click="callphone(mainData.user[0].info.phone)">
+						<img src="imgs/details-icon5.png" style="width:20px; position: relative;top: 8px;" />
+					</div>
+				</div>
+			</div>
+			<div class="bg1" style="border-top: 10px solid #f2f2f2; width: 100%;">
+				<div class="font15 color1" style="margin-left: 15px; border-bottom: solid 2px #F4F4F4; height: 40px; line-height: 40px;">
+					详情信息
+				</div>
+				<div class="color3 font11">
+					<div class="content ql-editor" style="clear: both;">
+						<p class="p1" v-html="mainData.content?mainData.content:''"></p>
+					</div>
+				</div>
+
+			</div>
+			<div class="little bg1">
+				<div class="bg3 font12" style="color: #fff; height: 20px;text-align: center;line-height: 20px;">
+					分享链接
+				</div>
+				<div class="color5 bg1 font11" style="text-align: center;line-height: 30px; height: 30px; border-bottom: dashed 1px #F54A6F;">
+					返佣金￥5
+				</div>
+				<div class="font12 color3" style="text-align: center;margin-top: 10px;">
+					好友下单得佣金
+				</div>
+				<div>
+					<button class="bg3 radiu20" style="height: 25px;width: 80px; text-align: center;line-height: 25px; margin:6px auto;color:#fff"
+					 @click="showShare">
+						立即分享</button>
+				</div>
+			</div>
+			<div style="width:100%;height:55px"></div>
+			<div class="navbar-brand">
+				<ul style="height: 55px;">
+					<li style="border-right: solid 1px #CCCCCC;" @click="intoPath('index')">
+						<div class="navbar-img"><img src="imgs/details-icon6.png" /></div>
+						<div class="font12 color3">返回首页</div>
+					</li>
+					<li @click="callphone(mainData.user[0].info.phone)">
+						<div class="navbar-img"><img src="imgs/details-icon7.png" /> </div>
+						<div class="font12 color3">一键拨号</div>
+					</li>
+					<li class="bg3" style="line-height: 50px;position: relative; top: -15px; left: 15px;" @click="intoDetail('pay',mainData.id)">
+
+						<div class="font12" style="color: #fff;">立即购买</div>
+
+					</li>
+				</ul>
+			</div>
+			<div id="stor-top" :style="isShow?'display:block':'display:none'">
+				<div style="width: 100%; height: 497px; background: rgba(0,0,0,0.5);"></div>
+				<div class="bg1" style="width: 100%; height: 170px;">
+					<div style="padding: 15px; margin-bottom: 10px;">
+						<img class="flo-right" style="width: 20px;" src="imgs/details-icon3.png" @click="showShare" />
+						<div style="clear: both;"></div>
+					</div>
+					<div class="flex">
+						<div style="width: 60px;height: 80px; text-align: center; margin-left: 15px;" @click="test">
+							<div style="width: 60px; height: 60px; overflow: hidden;">
+								<img src="imgs/details-icon1.png" style="width: 40px;" />
+							</div>
+							<div class="font10 color2">生成海报</div>
+						</div>
+
+						<div class="ilblock" style="width: 60px;height: 80px; text-align: center; margin-left: 15px;" @click="copyText">
+							<div style="width: 60px; height: 60px; overflow: hidden;">
+								<img src="imgs/details-icon2.png" style="width: 40px;" />
+							</div>
+							<div class="font10 color2">复制链接</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						sliderData: [],
+						buttonClick: false,
+						isLoadAll: false,
+						mainData: [],
+						nowTime:'',
+						QrData:[],
+						paginate:{
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+						searchItem:{
+							thirdapp_id:2,
+							type:1
+						},
+						url:'',
+						isShow:false,
+						ishowPic:false
+					}
+		
+				},
+				
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+						var user_no = window.base.GetRequest().user_no;
+						if (user_no) {
+							localStorage.removeItem('user_token');
+							localStorage.removeItem('user_no');
+						};
+						
+						var callback = (res)=>{
+						  
+						 this.init()
+						  
+						};
+						window.base.getUserToken(callback);
+					
+					
+				},
+				
+
+				
+		
+				methods: {
+					
+			
+					
+					init(){
+						const self = this;
+						
+						this.getMainData();
+						self.getQrData()
+					},
+					
+					test(){
+						const self = this;
+					
+					
+						html2canvas(document.getElementById("test"),{ width:375,height:667 }).then(function(canvas){
+							var imgUrl = canvas.toDataURL();
+							self.url = imgUrl;
+							if(imgUrl){
+								self.ishowPic = true,
+								self.isShow = false
+							}
+						});	
+						
+					},
+		
+					callphone(phone){    
+						
+						console.log('phone',phone)
+						window.location.href = "tel:"+phone;
+					},
+					
+					map(){
+						const self = this;
+						window.location.href = "http://api.map.baidu.com/marker?location=" 
+						+ self.mainData.user[0].info.latitude + "," + self.mainData.user[0].info.longitude + "&title=" + self.mainData.user[0].info.name + "&content=" +self.mainData.user[0].info.address+ "&output=html"
+					},
+					
+					copyText() {
+						var Url2 = document.URL+'&user_no='+localStorage.getItem('user_no');
+						var oInput = document.createElement('input');
+						oInput.value = Url2;
+						document.body.appendChild(oInput);
+						oInput.select();
+						document.execCommand("Copy"); 
+						oInput.className = 'oInput';
+						oInput.style.display = 'none';
+						
+						alert("复制成功");
+						
+					},
+					
+					getQrData(){
+					    const self = this;
+					    const postData = {};
+					    postData.token = localStorage.getItem('user_token');
+					    postData.param = window.location.href+'&user_no='+localStorage.getItem('user_no');
+					    postData.ext = 'png';
+					    const callback = (res)=>{
+					      console.log(res);
+					      self.QrData = res.info;
+					      console.log(9990,self.QrData)
+					    };
+					    window.base.getQrCommonCode(postData,callback);
+					},
+					
+					getMainData() {
+						const self = this;
+						const postData = {
+							searchItem: {
+								id: window.base.GetRequest().id,
+							}
+						};
+						postData.getAfter = {
+							user:{
+								token:localStorage.getItem('user_token'),
+								tableName:'User',
+								middleKey:'user_no',
+								key:'user_no',
+								searchItem:{
+									status:1
+								},
+								condition:'='
+							},
+					
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData = res.info.data[0];							
+							} else {
+								alert('数据错误')
+							};	
+						};
+						window.base.productGet(postData, callback);
+					},
+					
+					showShare(){
+						const self = this;
+						self.isShow = !self.isShow;
+						
+					},
+					
+					closePic(){
+						const self = this;
+						self.ishowPic = false
+					},
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'
+					},
+					
+		
+					intoDetail(url,id) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					},
+		
+				}
+		
+			});
+		</script>
+
 	</body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 	<head>
-		<title></title>
+		<title>聚划算</title>
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -24,88 +24,212 @@
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
 		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
-		<link rel="stylesheet" type="text/css" href="YSG.css/public.css"/>
-		<link rel="stylesheet" type="text/css" href="YSG.css/index.css"/>
+		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
+		<link rel="stylesheet" type="text/css" href="YSG.css/index.css" />
 	</head>
 	<body>
-		<div class="head">
-			聚划算
-		</div>
-		<div class="name">
-			<div class="radiu50 overflow0 ilblock" style="width:50px ;height: 50px;">
-				<img src="imgs/home-img.png" style="width:50px ;height: 50px;"/>
+		<div id="app">
+			<div class="name">
+				<div class="radiu50 overflow0 ilblock" style="width:50px ;height: 50px;">
+					<img :src="userData.headImgUrl" style="width:50px ;height: 50px;" />
+				</div>
+				<div class="font13 color1 ilblock">{{userData.nickname}}</div>
 			</div>
-			<div class="font13 color1 ilblock">名称名称</div>
-		</div>
-		<a href="calculate-store.html">
-			<div class="bg1 big-box radiu7" style="margin-top: 0px;">
-				<div class="box-top">
-					<img src="imgs/home-img1.png" />
-					<div class="top-img ilblock">抢购中</div>
-				</div>
-				<div class="box-text color1 font14">
-					标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题。
-				</div>
-				<div class="box-btm">
-					<div class="color5 ilblock">￥156.99<span class="font10" style="color: rgb(173,173,173);">门市价￥230</span> </div>
-					<div class="ilblock flo-right font12 color2">销售量：662</div>
-				</div>
-			</div>
-		</a>
-		
-		<a href="calculate-store.html">
-			<div class="bg1 big-box radiu7">
-				<div class="box-top">
-					<img src="imgs/home-img1.png" />
-					<div class="top-imgb ilblock">预售中</div>
-				</div>
-				<div class="box-text color1 font14">
-					标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题。
-				</div>
-				<div class="box-btm">
-					<div class="color5 ilblock">￥156.99<span class="font10" style="color: rgb(173,173,173);">门市价￥230</span> </div>
-					<div class="ilblock flo-right font12 color2">销售量：662</div>
+			<div v-for="item in mainData" @click="intoDetail('calculate-store',item.id)">
+				<div class="bg1 big-box radiu7" style="margin-top: 0px;">
+					<div class="box-top">
+						<img :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" />
+						<div class="top-img ilblock" v-if="nowTime>item.start_time">抢购中</div>
+						<div class="top-imgb ilblock" v-if="nowTime<item.start_time">预售中</div>
+					</div>
+					<div class="box-text color1 font14" style="height:1.6rem">
+						{{item.title}}
+					</div>
+					<div class="box-btm">
+						<div class="color5 ilblock">￥{{item.price}}<span class="font10" style="color: rgb(173,173,173);">门市价￥{{item.o_price}}</span>
+						</div>
+						<div class="ilblock flo-right font12 color2">销售量：{{item.false_sale_count}}</div>
+					</div>
 				</div>
 			</div>
-		</a>
-		
-		
-		
-		
-		
-		
-		
-		
-		<div style="width: 100%;height: 80px;"></div>
-		<div class="navbar-brand">
-			<ul>
-				<li>
-					<a href="index.html">
-						<div class="navbar-img"><img src="imgs/nabar1.png"/></div>
-						<div>首页</div>
-					</a>
-				</li>
-				<li>
-					<a href="calculate.html">
-						<div class="navbar-img"><img src="imgs/nabar2-a.png" /> </div>
-						<div style="color: #F20C3E;">聚划算</div>
-					</a>	
-				</li>
-				<li>
-					<a href="strategy.html">
-						<div class="navbar-img"><img src="imgs/微信图片_20190430095908.png" /> </div>
-						<div>攻略</div>
-					</a>	
-				</li>
-				<li><a href="user.html">
-				<div class="navbar-img"><img src="imgs/nabar4.png" /></div>
-				<div>我的</div>
-				</a></li>
-			</ul>
+
+
+
+
+
+
+
+
+			<div style="width: 100%;height: 80px;"></div>
+			<div class="navbar-brand">
+				<ul>
+					<li>
+						<a href="index.html">
+							<div class="navbar-img"><img src="imgs/nabar1.png" /></div>
+							<div>首页</div>
+						</a>
+					</li>
+					<li>
+						<a href="calculate.html">
+							<div class="navbar-img"><img src="imgs/nabar2-a.png" /> </div>
+							<div style="color: #F20C3E;">聚划算</div>
+						</a>
+					</li>
+					<li>
+						<a href="strategy.html">
+							<div class="navbar-img"><img src="imgs/nabar3.png" /> </div>
+							<div>攻略</div>
+						</a>
+					</li>
+					<li><a href="user.html">
+							<div class="navbar-img"><img src="imgs/nabar4.png" /></div>
+							<div>我的</div>
+						</a></li>
+				</ul>
+			</div>
 		</div>
+		<script type="text/babel">
+			var app = new Vue({
+				el: '#app',
+				data: function() {
+					return {
+						sliderData: [],
+						userData:[],
+						buttonClick: false,
+						isLoadAll: false,
+						mainData: [],
+						nowTime:'',
+						paginate:{
+							count: 0,
+							currentPage: 1,
+							pagesize: 6,
+							is_page: true,
+						},
+						searchItem:{
+							thirdapp_id:2,
+							type:2
+						},
+						
+					}
+		
+				},
+				
+				mounted() {
+					window.addEventListener('scroll', this.handleScroll)
+				},
+				
+				computed: {
+					// 计算属性的 getter
+					stringifyOrder: function() {
+						return JSON.stringify(this.order).replace(/\"/g, "");
+					}
+				},
+				
+				created: function() {
+					
+					var user_no = window.base.GetRequest().user_no;
+					if (user_no) {
+						localStorage.removeItem('user_token');
+						localStorage.removeItem('user_no');
+					};
+					var callback = (res)=>{
+					  
+					 this.init()
+					  
+					};
+					window.base.getUserToken(callback);
+					
+					
+					
+				},
+		
+		
+		
+				methods: {
+					
+					init(){
+						const self = this;
+						self.nowTime = Date.parse(new Date());
+						console.log(self.nowTime)
+						this.getMainData();
+						this.userGet()
+					},
+					
+					userGet() {
+						const self = this;
+						const postData = {
+							token: localStorage.getItem('user_token'),
+							thirdapp_id: 2
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.userData = res.info.data[0]
+							} else {
+								alert('数据错误')
+							}
+							
+						}
+						window.base.userGet(postData, callback);
+					},
+		
+					handleScroll() {
+						var wScrollY = window.scrollY; // 当前滚动条位置  
+						var wInnerH = window.innerHeight; // 设备窗口的高度（不会变）  
+						var bScrollH = document.body.scrollHeight; // 滚动条总高度      
+						if ((wScrollY + wInnerH >= bScrollH) && !this.isLoadAll && !this.buttonClick) {
+							this.buttonClick = true;
+							this.paginate.currentPage++;
+							this.getMainData();
+						};
+					},
+		
+					getMainData(isNew) {
+						const self = this;
+						if (isNew) {
+							self.mainData = [];
+							self.paginate = {
+								count: 0,
+								currentPage: 1,
+								pagesize: 6,
+								is_page: true,
+							}
+						};
+						const postData = {};
+						postData.paginate = window.base.cloneForm(self.paginate);
+						postData.searchItem = window.base.cloneForm(self.searchItem);
+					
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.mainData.push.apply(self.mainData, res.info.data)
+							} else {
+								self.isLoadAll = true;
+								alert('没有更多了');
+							};
+							console.log('self.mainData', self.mainData)
+							console.log('self.nowTime',self.nowTime)
+						};
+						window.base.productGet(postData, callback);
+					},
+					
+		
+					intoPath(url) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'
+					},
+					
+		
+					intoDetail(url,id) {
+						console.log(url);
+						var into_url = url;
+						window.location.href = into_url + '.html'+'?id='+id
+					},
+		
+				}
+		
+			});
+		</script>
+
 	</body>
-	
+
 </html>
-	
-
-

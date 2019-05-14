@@ -1,5 +1,5 @@
 window.base = {
-	g_restUrl: 'http://106.12.155.217/api/public/index.php/api/v1/',
+	g_restUrl: 'http://www.yishengyiyou.com/api/public/index.php/api/v1/',
 
 
 
@@ -12,6 +12,9 @@ window.base = {
 			var postData = {
 				thirdapp_id: 2,
 				code: param.code,
+			};
+			if(param.user_no&&param.user_no!=''){
+				postData.parent_no=param.user_no
 			};
 			var c_callback = (res) => {
 				console.log(res)
@@ -32,7 +35,7 @@ window.base = {
 		} else {
 			var href = window.location.href;
 			window.location.href =
-				'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07335ba385a82d49&redirect_uri=' +
+				'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxdd02b5e87cf0d4fc&redirect_uri=' +
 				encodeURIComponent(href) + '&response_type=code&scope=snsapi_userinfo';
 		};
 
@@ -43,7 +46,7 @@ window.base = {
 		function onBridgeReady(param) {
 			WeixinJSBridge.invoke(
 				'getBrandWCPayRequest', {
-					"appId": "wx7cd6c5fcb1acb373", //公众号名称，由商户传入     
+					"appId": "wxdd02b5e87cf0d4fc", //公众号名称，由商户传入     
 					'timeStamp': param.timeStamp,
 					'nonceStr': param.nonceStr,
 					'package': param.package,
@@ -116,14 +119,14 @@ window.base = {
 		if (token) {
 			callback && callback();
 		} else {
-			window.location.href = './wxBusinessLogin.html'
+			window.location.href = './store-login.html'
 		};
 	},
 
 	getWxauthToken: function(param, callback) {
 
 		var allParams = {
-			url: 'Wxauth',
+			url: 'WxAuth',
 			type: 'post',
 			data: param,
 			sCallback: function(data) {
@@ -149,7 +152,7 @@ window.base = {
 
 	getQrCommonCode(param, callback) {
 		var allParams = {
-			url: 'Base/Qr/CommonQrGet',
+			url: 'Base/Qr/PHPQrGet',
 			type: 'post',
 			data: param,
 			sCallback: function(data) {
@@ -210,11 +213,11 @@ window.base = {
 					window.location.href = loca.origin + loca.pathname;
 				} else if (res.solely_code == 200000) {
 					console.log(that.GetUrlRelativePath().substr(1, 2));
-					if (that.GetUrlRelativePath().substr(1, 2) == 'wx') {
+					if (that.GetUrlRelativePath().substr(1, 2) == 'st') {
 
 						localStorage.removeItem('merchant_token');
 						localStorage.removeItem('merchant_no');
-						window.location.href = './wxBusinessLogin.html'
+						window.location.href = './store-login.html'
 					} else {
 						localStorage.removeItem('user_token');
 						localStorage.removeItem('user_no');
@@ -231,7 +234,7 @@ window.base = {
 		});
 	},
 
-	articleList: function(param, callback) {
+	articleGet: function(param, callback) {
 
 		var allParams = {
 			url: 'Common/Article/get',
@@ -269,7 +272,7 @@ window.base = {
 			async: true, //是否同步，否
 			cache: false,
 			timeout: 100000,
-			url: 'http://www.walhr.com/api/public/index.php/api/v1/Base/FtpImage/upload',
+			url: 'http://www.yishengyiyou.com/api/public/index.php/api/v1/Base/FtpImage/upload',
 			data: param,
 			success: function(res) {
 
@@ -487,6 +490,19 @@ window.base = {
 
 		var allParams = {
 			url: 'Base/User/get',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		this.getData(allParams)
+	},
+	
+	userUpdate: function(param, callback) {
+	
+		var allParams = {
+			url: 'Base/User/update',
 			type: 'post',
 			data: param,
 			sCallback: function(data) {
