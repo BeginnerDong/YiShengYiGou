@@ -177,7 +177,8 @@
 							passage1:'',
 							check_no:''
 						},
-						distriData:[]
+						distriData:[],
+						orderId:''
 					}
 		
 				},
@@ -212,7 +213,10 @@
 					init(){
 						const self = this;
 						self.nowTime = Date.parse(new Date());
-						console.log(self.nowTime)
+						console.log(self.nowTime);
+						if(window.base.GetRequest().orderId){
+							self.orderId = window.base.GetRequest().orderId
+						};
 						self.getMainData();
 						self.createCode()
 					},
@@ -313,6 +317,10 @@
 					
 					addOrder(e) {
 						const self = this;
+						if(self.orderId!=''){
+							self.pay();
+							return
+						};
 						const productData = [
 							
 						];
@@ -358,7 +366,7 @@
 						
 						const postData = {
 						
-							/* score:self.price */
+							
 							
 							wxPay:{
 								price:self.price
@@ -369,7 +377,7 @@
 						postData.token = localStorage.getItem('user_token');
 						
 						postData.searchItem = {
-							id: order_id
+							id: self.orderId 
 						};
 						postData.payAfter = [];
 						postData.payAfter.push(
@@ -429,7 +437,7 @@
 						const callback = (res) => {
 							console.log(res)
 							if (res.solely_code == 100000) {
-								alert('支付成功');
+								
 								
 								if (res.info) {
 									const payCallback = (payData) => {

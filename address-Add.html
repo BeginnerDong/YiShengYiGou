@@ -62,7 +62,7 @@
 				<div class="ilblock color1 font14" style="margin-left: 15px;">
 					手机号码
 				</div>
-				<input class="color2 " placeholder="请输入真实姓名" style="border: none;height: 90%; margin-left: 18px;" v-model="submitData.phone" />
+				<input class="color2 " placeholder="请输入手机号码" style="border: none;height: 90%; margin-left: 18px;" v-model="submitData.phone" />
 			</div>
 			<div class="save-box">
 				<div class="ilblock color1 font14" style="margin-left: 15px;">
@@ -218,6 +218,7 @@
 						const self = this;
 						self.buttonCanClick = false;
 						var phone = self.submitData.phone;
+						self.submitData.city = self.prov + self.city;
 						const pass = window.base.checkComplete(self.submitData);
 		
 						console.log('self.data.sForm', self.submitData)
