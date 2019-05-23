@@ -444,7 +444,7 @@
 										if (payData == 1) {
 											const cc_callback = () => {
 												alert('支付成功');
-												
+												window.location.href = 'order-one.html'
 											};
 					
 										};
@@ -452,7 +452,7 @@
 									window.base.realPay(res.info, payCallback);
 								} else {
 									alert('支付成功');
-									
+									window.location.href = 'order-one.html'
 								};
 							} else {
 								alert(res.msg, 'none');

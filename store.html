@@ -169,7 +169,7 @@
 					分享链接
 				</div>
 				<div class="color5 bg1 font11" style="text-align: center;line-height: 30px; height: 30px; border-bottom: dashed 1px #F54A6F;">
-					返佣金￥5
+					返佣金￥{{mainData.first_class}}
 				</div>
 				<div class="font12 color3" style="text-align: center;margin-top: 10px;">
 					好友下单得佣金
@@ -316,8 +316,17 @@
 					
 					map(){
 						const self = this;
+						console.log(self.mainData.user[0].info.latitude);
+						console.log(self.mainData.user[0].info.longitude);
+						
+						/* window.location.href = "http://api.map.baidu.com/marker?location=" +39.903719+ "," +116.427281+ 
+						"&title=" + 'ddddd' + "&content=" +'ssss'+ "&output=html" */
+
 						window.location.href = "http://api.map.baidu.com/marker?location=" 
-						+ self.mainData.user[0].info.latitude + "," + self.mainData.user[0].info.longitude + "&title=" + self.mainData.user[0].info.name + "&content=" +self.mainData.user[0].info.address+ "&output=html"
+						+ parseFloat(self.mainData.user[0].info.latitude) + "," + parseFloat(self.mainData.user[0].info.longitude)
+						+ "&title=" + self.mainData.user[0].info.name + "&content=" +self.mainData.user[0].info.address+ "&output=html"
+						
+						
 					},
 					
 					copyText() {
@@ -370,7 +379,9 @@
 						};
 						const callback = (res) => {
 							if (res.info.data.length > 0) {
-								self.mainData = res.info.data[0];							
+								self.mainData = res.info.data[0];	
+								console.log(self.mainData.user[0].info.latitude)	
+								console.log(self.mainData.user[0].info.longitude)
 							} else {
 								alert('数据错误')
 							};	

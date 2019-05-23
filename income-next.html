@@ -47,18 +47,20 @@
 				<div class="font15 color1" style="margin-top: 30px;">提现金额</div>
 				<div class="box-list">
 					<span class="color1" style="font-size: 30px; line-height: 65px;">￥</span>
-					<input placeholder="请输入提现金额" v-model="submitData.count" style="border:none"/>
+					<input placeholder="请输入提现金额" v-model="submitData.count" style="border:none" />
 				</div>
-				<div class="font12 color2" style="line-height: 35px;">本次可提现￥{{userData.info?userData.info.balance:''}}，<span class="color1" @click="all">全部提现</span> </div>
+				<div class="font12 color2" style="line-height: 35px;">本次可提现￥{{userData.info?userData.info.balance:''}}，<span class="color1"
+					 @click="all">全部提现</span> </div>
 				<button class="bg3" style="width: 300px; height: 40px; color: #fff; margin: 36px auto;" type="button" @click="submit">提现</button>
 			</div>
 			<div style="width: 100%; padding: 15px;">
 				<div class="color3 font12">
 					提现需加客服微信，客服会帮你申请
 				</div>
-				<div class="color3 font12" style="line-height: 40px;">
-					微信号：56596253226
-					<div class="font12 bg3 radiu20 ilblock flo-right" style="color: #fff; height: 20px; width: 50px; line-height: 20px; text-align: center;">
+				<div class="color3 font12" style="line-height: 40px;" >
+					微信号：<span id="keydiv">{{csData.description}}</span>
+					<div class="font12 bg3 radiu20 ilblock flo-right" style="color: #fff; height: 20px; width: 50px; line-height: 20px; text-align: center;"
+					@click="copyText">
 						复制</div>
 				</div>
 			</div>
@@ -70,7 +72,8 @@
 					return {
 						currentId: 0,
 						userData:[],
-						mainData: [],
+						mainData: [],	
+						csData:[],
 						paginate: {
 							count: 0,
 							currentPage: 1,
@@ -102,8 +105,8 @@
 				
 					var callback = (res)=>{
 					  self.userGet();
-					 
-					  
+					 self.labelGet()
+						
 					};
 					window.base.getUserToken(callback);
 					
@@ -120,6 +123,32 @@
 							this.paginate.currentPage++;
 							this.getMainData();
 						};
+					},
+					
+					copyText () {
+						var Url2 = document.getElementById("keydiv").innerText;
+						var oInput = document.createElement('input');
+						oInput.value = Url2;
+						document.body.appendChild(oInput);
+						oInput.select();
+						document.execCommand("Copy"); 
+						oInput.className = 'oInput';
+						oInput.style.display = 'none';
+						alert('复制成功');
+					},
+					
+					labelGet() {
+						const self = this;
+						const postData = {
+							title:'客服微信',
+							thirdapp_id: 2
+						};
+						const callback = (res) => {
+							if (res.info.data.length > 0) {
+								self.csData = res.info.data[0]
+							}
+						}
+						window.base.labelGet(postData, callback);
 					},
 					
 					userGet() {
@@ -169,8 +198,10 @@
 					
 						const pass = window.base.checkComplete(self.submitData);
 						console.log('pass', pass)
+						console.log('parseFloat(self.submitData.count)', parseFloat(self.submitData.count))
+						console.log('parseFloat(self.userData.info.balance)', parseFloat(self.userData.info.balance))
 						if (pass) {
-							if(parseFloat(self.submitData.count)<parseFloat(self.userData.info.balance)){
+							if(parseFloat(self.submitData.count)<=parseFloat(self.userData.info.balance)){
 								self.flowLogAdd()
 							}else{
 								alert('佣金不足')
