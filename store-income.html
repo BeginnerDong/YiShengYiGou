@@ -28,8 +28,8 @@
 		<style type="text/css">
 			.top {
 				width: 100%;
-				height: 137px;
-				padding-top: 40px;
+				height: 184px;
+				padding-top: 76px;
 			}
 
 			.list-item {
@@ -42,11 +42,22 @@
 				width: 40px;
 				height: 40px;
 				margin-top: 13px;
+				margin-right: 2px;
 			}
 
 			.img-box img {
 				width: 40px;
 				height: 40px;
+			}
+			.name{
+				line-height: 36px; 
+				position: relative;
+				top:7px;
+			}
+			.time{
+				overflow: hidden;
+				position: relative;
+				top: 2px;
 			}
 		</style>
 	</head>
@@ -68,8 +79,8 @@
 						<img :src="item.merchant.headImgUrl" class="radiu50"/>
 					</div>
 					<div class="ilblock " style="color: rgb(153,153,153);">
-						<div class="color3 avoidOverflow" style="line-height: 36px;">{{item.merchant.nickname}}</div>
-						<div class="color2" style="overflow: hidden;">{{item.create_time}}</div>
+						<div class="color3 font12 avoidOverflow name">{{item.merchant.nickname}}</div>
+						<div class="color2 font10 time">{{item.create_time}}</div>
 					</div>
 				</div>
 				<div class="ilblock flo-left font13 color3" style="width: 30%; text-align: center;">
