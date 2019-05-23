@@ -83,25 +83,26 @@
 					￥{{item.count}}
 				</div>
 			</div>
-
-			<div class="list-item" v-for="item in mainData" v-if="item.relation_id!=''">
-				<div class="ilblock flo-left" style="width: 35%;">
-					<div class="img-box ilblock overflow0 radiu50">
-						<img :src="item.merchant.headImgUrl" />
+			<div class="list-item" v-for="item in mainData"  v-if="item.relation_id!=''">
+				<div class="ilblock flo-left" style="width: 40%;display: flex;">
+					<div class="img-box ilblock  radiu50" >
+						<img :src="item.merchant.headImgUrl" class="radiu50"/>
 					</div>
 					<div class="ilblock " style="color: rgb(153,153,153);">
-						<div class="color3 font12 name">{{item.merchant.nickname}}</div>
+						<div class="color3 font12 avoidOverflow name">{{item.merchant.nickname}}</div>
 						<div class="color2 font10 time">{{item.create_time}}</div>
 					</div>
 				</div>
-				<div class="ilblock flo-left font13 color3" style="width: 35%; text-align: center;">
+				<div class="ilblock flo-left font13 color3" style="width: 30%; text-align: center;">
 					<div class="color3" style="margin-top: 15px;">{{item.product.title}}</div>
 					<div class="color2" style="line-height: 25px;">￥{{item.product.price}}</div>
 				</div>
+				
 				<div class="ilblock flo-left font13 color5" style="width: 30%; line-height: 65px; text-align: right;">
 					￥{{item.count}}
 				</div>
 			</div>
+			
 		</div>
 		</div>
 		<script type="text/babel">
@@ -222,6 +223,10 @@
 							if (res.solely_code == 100000) {
 								if (res.info.data.length > 0) {
 									self.mainData.push.apply(self.mainData, res.info.data);
+									for (var i = 0; i < self.mainData.length; i++) {
+										self.mainData[i].create_time = self.mainData[i].create_time.substring(0, 10);
+										
+									}
 								} else {
 									self.isLoadAll = true;
 									alert('没有更多了');
