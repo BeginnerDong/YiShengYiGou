@@ -24,6 +24,7 @@
 		<!-- <script src="js/jquery.stellar.js"></script> -->
 		<script src="js/jquery.waypoints.min.js"></script>
 		<link rel="stylesheet" media="screen and (max-width:500px)" href="style.css">
+		<script src="https://cdn.bootcss.com/clipboard.js/2.0.4/clipboard.min.js" type="text/javascript "></script>
 		<link rel="stylesheet" type="text/css" href="YSG.css/public.css" />
 		<style type="text/css">
 			.box {
@@ -58,14 +59,26 @@
 					提现需加客服微信，客服会帮你申请
 				</div>
 				<div class="color3 font12" style="line-height: 40px;" >
-					微信号：<span id="keydiv">{{csData.description}}</span>
-					<div class="font12 bg3 radiu20 ilblock flo-right" style="color: #fff; height: 20px; width: 50px; line-height: 20px; text-align: center;"
-					@click="copyText">
-						复制</div>
+					微信号：<span id="copyVal" readonly>{{csData.description}}</span>
+					<button class="font12 bg3 copyBtn radiu20 ilblock flo-right" style="color: #fff; height: 20px; width: 50px; line-height: 20px; text-align: center;"
+					data-clipboard-action="copy"data-clipboard-target="#copyVal">
+						复制</button>
 				</div>
+				
 			</div>
 		</div>
 		<script type="text/babel">
+			var copyBtn = new ClipboardJS('.copyBtn');
+			
+			copyBtn.on("success",function(e){
+				// 复制成功
+				alert('复制成功');
+				e.clearSelection();
+			});
+			copyBtn.on("error",function(e){
+				//复制失败；
+				console.log( e.action )
+			});
 			var app = new Vue({
 				el: '#app',
 				data: function() {

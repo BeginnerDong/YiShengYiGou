@@ -100,7 +100,7 @@
 			</div>
 			<div style="width: 90%; height: 100px; margin: 15px 5%;">
 				<div class="color1 font13">备注</div>
-				<textarea class="bg2 overflow0" style=" margin-top: 10px; height: 100%; width: 100%; border: none;" placeholder="请输入备注" v-model="submitData.passage1">
+				<textarea class="bg2 overflow0" style=" margin-top: 10px; height: 100%; width: 100%; border: none;overflow-y:scroll;resize:none;" placeholder="请输入备注" v-model="submitData.passage1">
 
 				</textarea>
 			</div>
@@ -110,7 +110,7 @@
 			<div class="ilblock flo-left font14 color1" style="width: 56%; text-align: center;">
 				小计：<span class="color5">￥{{price}}</span>
 			</div>
-			<div class="ilblock flo-right bg3 font14" style="width: 44%;left: 5px; line-height: 50px; text-align: center; color: #fff; height: 150px; position: relative;top: -15px;">
+			<div  @click="buttonCanClick?addOrder():''" class="ilblock flo-right bg3 font14" style="width: 44%;left: 5px; line-height: 50px; text-align: center; color: #fff; height: 150px; position: relative;top: -15px;">
 				微信支付
 			</div>
 		</div>
@@ -121,7 +121,7 @@
 				data: function() {
 					return {
 						sliderData: [],
-						buttonClick: false,
+						buttonCanClick: true,
 						isLoadAll: false,
 						mainData: [],
 						nowTime:'',
@@ -163,6 +163,7 @@
 				},
 				
 				created: function() {
+					
 					var callback = (res)=>{
 					  
 					 this.init()
@@ -286,8 +287,9 @@
 					
 					addOrder(e) {
 						const self = this;
-						
+						self.buttonCanClick = false;
 						if(self.addressData.length==0){
+							self.buttonCanClick = true;
 							alert('请添加收货地址');
 							return
 						};
@@ -328,6 +330,7 @@
 								
 								
 							} else {
+								self.buttonCanClick = true;
 								alert(res.msg);
 							};
 						};
@@ -410,6 +413,7 @@
 						};
 						const callback = (res) => {
 							console.log(res)
+							self.buttonCanClick = true;
 							if (res.solely_code == 100000) {
 								
 								

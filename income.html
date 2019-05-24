@@ -63,7 +63,7 @@
 	<body>
 	<div id="app">
 		<div class="top bg3">
-			<div style="font-size: 25px; color:#fff; text-align: center;">￥{{userData.info.balance}}</div>
+			<div style="font-size: 25px; color:#fff; text-align: center;">￥{{userData.info?userData.info.balance:''}}</div>
 			<div class="font13 radiu20 bg1" style="width: 60px; height: 22px; text-align: center; line-height: 22px; margin: 10px auto;">
 				<a class="color1" href="income-next.html">提现</a>
 			</div>

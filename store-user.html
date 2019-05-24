@@ -85,7 +85,9 @@
 		</div>
 		
 		
-		
+		<button style="background:#F20C3E;color: #fff;width:70%;margin: 50px auto;
+    height: 40px;
+    border-radius: 10px;" @click="loginOff">退出登陆</button>
 		
 		
 		
@@ -161,7 +163,12 @@
 						window.base.userGet(postData, callback);
 					},
 		
-				
+					loginOff(){
+						const self = this;
+						localStorage.removeItem('merchant_token');
+						localStorage.removeItem('merchant_no');
+						window.location.href = 'user.html'
+					},
 		
 					intoPath(url) {
 						console.log(url);
